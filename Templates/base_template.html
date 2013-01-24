@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<!-- This is the base template for the django powered website TAMAS All of the other templated will derive from this one. -->
+<html>
+<head>
+	<title></title>
+	<!-- css -->
+
+	<!-- javascript includes-->
+</head>
+<body>
+	<!-- Contiainer div -->
+	<div id='container'>
+		<!-- header -->
+		<div id='header'>
+			<!-- logo -->
+			<div id='logo'>
+				TAMAS
+			</div>
+
+			<!-- need a block for the create and logoin regions which will not be there for every page -->
+			{%block header%}
+			{%endblock%}
+
+		</div>
+	</div>
+
+</body>
+</html>
