@@ -4,23 +4,33 @@
 <head>
 	<title></title>
 	<!-- css -->
-
+	<link rel="stylesheet" href="/static/styles.css" />
 	<!-- javascript includes-->
 </head>
 <body>
 	<!-- Contiainer div -->
-	<div id='container'>
+	<div class='container'>
 		<!-- header -->
-		<div id='header'>
+		<div class='header'>
 			<!-- logo -->
-			<div id='logo'>
+			<div class='logo'>
 				TAMAS
 			</div>
 
 			<!-- need a block for the create and logoin regions which will not be there for every page -->
 			{%block header%}
 			{%endblock%}
+			
 
+
+		</div>
+		<!-- Block for the content -->
+		{%block content%}
+
+		{%endblock%}
+
+		<!-- footer -->
+		<div class="footer">
 		</div>
 	</div>
 
