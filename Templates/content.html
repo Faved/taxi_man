@@ -7,12 +7,55 @@
 {%endblock%}
 {%block content%}
 <!-- lets lay out the main content -->
-<!-- left div -->
-<div class="left">
-	main table here
-</div>
-<div class="right">
-	Driver information here
+<!-- content div -->
+<div class="content">
+	<!-- left div -->
+	<div class="left">
+		<div id="tabs">
+		  <ul>
+		    <li><a href="#tabs-1">Current Jobs</a></li>
+		    <li><a href="#tabs-2">Past Jobs</a></li>
+		    <li><a href="#tabs-3">Extra currnelt</a></li>
+		  </ul>
+		  <div id="tabs-1">
+		    <p>table of currentjobs here</p>
+		  </div>
+		  <div id="tabs-2">
+		    <p>Table of past jobs here</p>
+		  </div>
+		  <div id="tabs-3">
+		    <p>not to sure yet what to put here</p>
+		  </div>
+		</div>
+
+	</div>
+	<div class="right">
+		<!-- the top is the current drivers -->
+		<div id="tabs2">
+		  <ul>
+		    <li><a href="#tabs-1">Drivers</a></li>
+		    <li><a href="#tabs-2">Escorts</a></li>
+		    <li><a href="#tabs-3">On Call</a></li>
+		  </ul>
+		  <div id="tabs-1">
+		    <p>Drivers will show here</p>
+		  </div>
+		  <div id="tabs-2">
+		    <p>list of escorts here.</p>
+		  </div>
+		  <div id="tabs-3">
+		    <p>On call drivers here</p>
+		  </div>
+		</div>
+
+		<!-- this will have a list of drivers on jobs -->
+		<div class="drivers_unavil">
+			<div class="driversU_head">
+				On jobs
+			</div>
+		</div>
+		
+	</div>
 </div>
 
 
