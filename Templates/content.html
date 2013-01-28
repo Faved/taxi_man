@@ -18,7 +18,29 @@
 		    <li><a href="#tabs-3">Extra currnelt</a></li>
 		  </ul>
 		  <div id="tabs-1">
-		    <p>table of currentjobs here</p>
+		    <table class='tableOfJobs'>
+				<thead>
+		       		<tr>
+		          	    <th>ID</th>
+			            <th>Time</th>
+			            <th>Pickup</th>
+			            <th>Destination</th>
+			            <th>Distance</th>
+			            <th>Job Time</th>
+		    	    </tr>
+			    </thead>
+			    <tbody>
+			    	<tr>
+			    		<td>amd1</td>
+			    		<td>12:30</td>
+			    		<td>Asda, Bodmin</td>
+			    		<td>Bodmin,Hosp</td>
+			    		<td>2 Miles</td>
+			    		<td>5 mins</td>
+			    	</tr>
+			        
+			    </tbody>
+			</table>
 		  </div>
 		  <div id="tabs-2">
 		    <p>Table of past jobs here</p>
@@ -33,12 +55,19 @@
 		<!-- the top is the current drivers -->
 		<div id="tabs2">
 		  <ul>
-		    <li><a href="#tabs-1">Drivers</a></li>
+		    <li><a href="#DriversAvail">Drivers</a></li>
 		    <li><a href="#tabs-2">Escorts</a></li>
 		    <li><a href="#tabs-3">On Call</a></li>
 		  </ul>
-		  <div id="tabs-1">
-		    <p>Drivers will show here</p>
+		  <div id="DriversAvail">
+		    <!-- the current available drivers will show here. currently hard coded, this will come from the database eventually -->
+		    <div id="driver1" class="drivers_avail"><p> Driver 1 <br/>drivers Name</p></div>
+		    <div id="driver2" class="drivers_avail"><p> Driver 2 <br/>drivers Name</p></div>
+		    <div id="driver3" class="drivers_avail"><p> Driver 3 <br/>drivers Name</p></div>
+		    <div id="driver4" class="drivers_avail"><p> Driver 4 <br/>drivers Name</p></div>
+		    <div id="driver5" class="drivers_avail"><p> Driver 5 <br/>drivers Name</p></div>
+		    <div id="driver5" class="drivers_avail"><p> Driver 5 <br/>drivers Name</p></div>
+		    <div id="driver5" class="drivers_avail"><p> Driver 5 <br/>drivers Name</p></div>
 		  </div>
 		  <div id="tabs-2">
 		    <p>list of escorts here.</p>

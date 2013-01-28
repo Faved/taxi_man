@@ -67,3 +67,34 @@ body{
 .ui-tabs{
 	height:98%;
 }
+#DriversAvail{
+ padding:0; 
+ height:89%;
+ overflow-y:scroll;
+}
+.drivers_avail{
+  width:100%;
+  padding:0;
+  background:#c7c7c7;
+  margin-top:5px;
+  text-align:center;
+  border-radius:0.3em;
+  display:table;
+}
+.drivers_avail p{
+	margin:0;
+  padding:0;
+  display:table-cell;
+  vertical-align:middle;
+}
+.tableOfJobs{
+  width:100%;
+  background-color:#c7c7c7;
+  border-radius: 5px 5px 0 0 ;
+}
+.tableOfJobs tbody tr{
+ background-color:#aaaaaa; 
+  text-align:center;
+}
+
+
