@@ -9,6 +9,8 @@ urlpatterns = patterns('',
     # url(r'^$', 'taxi_man.views.home', name='home'),
     # url(r'^taxi_man/', include('taxi_man.foo.urls')),
     url(r'^$','tamas.views.home'),
+    url(r'^api/$','tamas.views.api'),
+    url(r'^time/$','tamas.views.time'),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

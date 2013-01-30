@@ -3,7 +3,17 @@
 $(function() {
     $( "#tabs" ).tabs();
     $( "#tabs2" ).tabs();
-    setDriverHeight();
+   
+    $(".head-box").css('color','red');
+	var inter = setInterval(
+	function()
+	{
+		$(".head-box").load('/time');
+
+	}, 1000);
+
+
+
   });
 
 // setting the hieght of the driver_avail divs
