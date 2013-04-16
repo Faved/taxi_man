@@ -6,11 +6,16 @@
 	<!-- css -->
 	<link rel="stylesheet" href="/static/styles.css" />
 	<link rel="stylesheet" href="/static/smoothness/jquery-ui-1.10.0.custom.css" />
+	<link rel="stylesheet" href="/static/jquery.fancybox.css" />
 	<!-- javascript includes-->
 	<!-- jquery -->
 	<script src="static/jquery.js" ></script>
 	<!-- jqueryui -->
 	<script src="static/jquery-ui-1.10.0.custom.js" ></script>
+	<!-- fancybox -->
+	<script src="static/jquery.fancybox.js"></script>
+	<!-- Google Maps API -->
+	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"> </script>
 	<!-- Custom Javascript -->
 	<script src="static/functions.js"></script>
 
@@ -19,19 +24,9 @@
 	<!-- Contiainer div -->
 	<div class='container'>
 		<!-- header -->
-		<div class='header'>
-			<!-- logo -->
-			<div class='logo'>
-				TAMAS
-			</div>
-
-			<!-- need a block for the create and logoin regions which will not be there for every page -->
-			{%block header%}
-			{%endblock%}
-			
-
-
-		</div>
+		{%block header%}
+	
+		{%endblock%}
 		<!-- Block for the content -->
 		{%block content%}
 
@@ -39,8 +34,19 @@
 
 		<!-- footer -->
 		<div class="footer">
+			<div class='footer-inner'>
+				<img src="/static/closeicon.png"/>
+						<!-- this is the layout which will be used for creating bookings -->
+				<div id='custLeft'>
+				Will go here
+				</div>
 		</div>
 	</div>
+</div>
+{%block addbooking%}
+{%include "create.html"%}
+
+{%endblock%}
 
 </body>
 </html>

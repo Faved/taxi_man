@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 # Create your models here.
 #Models for the tamas project will go here
 
@@ -24,25 +24,18 @@ class Account(models.Model):
 	billing_postcode 	= models.CharField(max_length=20)
 
 #User
-class User(models.Model):
-	USER_CHOICES = (
-		('Controller','Controller'),
-		('Office','Office'),
-		('Administrator','Administrator'),
-		)
-	username 			= models.CharField(max_length=50)
-	password 			= models.CharField(max_length=200)
-	account_level 		= models.CharField(max_length=20, choices=USER_CHOICES)
-	name 				= models.CharField(max_length=50)
+# class User(models.Model):
+# 	USER_CHOICES = (
+# 		('Controller','Controller'),
+# 		('Office','Office'),
+# 		('Administrator','Administrator'),
+# 		)
+# 	username 			= models.CharField(max_length=50)
+# 	password 			= models.CharField(max_length=200)
+# 	account_level 		= models.CharField(max_length=20, choices=USER_CHOICES)
+# 	name 				= models.CharField(max_length=50)
 
-#Vehicle Table
-class Vehicle(models.Model):
-	VEHICLE_CHOICES = (
-		('Car','Car'),
-		('Minibus','Minibus'),
-		('Mobility','Mobility'),
-		)
-	vehicle_type 		= models.CharField(max_length=20, choices=VEHICLE_CHOICES)
+
 
 #Driver Table
 class Driver(models.Model):
@@ -74,22 +67,30 @@ class Escort(models.Model):
 
 #Booking Table - props the main table thats used!
 class Booking(models.Model):
+	VEHICLE_CHOICES = (
+		('Car','Car'),
+		('Minibus','Minibus'),
+		('Mobility','Mobility'),
+		)
 	pickup_address 		= models.CharField(max_length=200)
 	destin_address 		= models.CharField(max_length=200)
 	is_via 				= models.BooleanField()
 	pickup_time 		= models.TimeField()
 	leave_time 			= models.TimeField()
-	customer_name 		= models.CharField(max_length=200)
-	customer_number 	= models.CharField(max_length=50)
-	no_passengers 		= models.IntegerField()
+	customer_name 		= models.CharField(max_length=200, blank=True)
+	customer_number 	= models.CharField(max_length=50, blank=True)
+	no_passengers 		= models.IntegerField(blank=True)
 	wait_return 		= models.BooleanField()
-	escort_id 			= models.ForeignKey(Escort)
-	driver 				= models.ForeignKey(Driver)
-	entered_by 			= models.ForeignKey(User)
-	vehicle 			= models.ForeignKey(Vehicle)
-	extra_info 			= models.TextField()
+	escort_id 			= models.ForeignKey(Escort,null=True,blank=True)
+	driver 				= models.ForeignKey(Driver,null=True,blank=True)
+	entered_by 			= models.ForeignKey(User,null=True,blank=True)
+	vehicle_type 		= models.CharField(max_length=20, choices=VEHICLE_CHOICES)
+	extra_info 			= models.TextField(blank=True)
 	complete 			= models.BooleanField()
 	date 				= models.DateField()
+	account 			= models.ForeignKey(Account, null=True,blank=True)
+	def __unicode__(self):
+		return unicode(self.id)
 
 #contract table
 class Contract(models.Model):

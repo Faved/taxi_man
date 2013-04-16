@@ -1,46 +1,48 @@
 body{
-	font-family: Verdana,Arial,sans-serif;
-	font-size: 0.6em;
+  font-family: Verdana,Arial,sans-serif;
+  font-size: 0.6em;
   line-height:1.8em;
 }
+.hidden{
+  display:none;
+}
 .container{
-	margin:0 auto;
-	
-	width:1000px;
-	border:thin solid red;
+  margin:0 auto;
+  
+  width:1000px;
+  border:thin solid red;
 }
 .content{
-	height:500px;
+  height:500px;
 }
 
 
 .logo{
-	width:300px;
-	height:74px;
-	text-indent: -999px;
-	background:url("/static/tamas-logo.png");
-	float:left;
-	margin-top:10px;
-	margin-left: 10px;
+  width:300px;
+  height:74px;
+  text-indent: -999px;
+  background:url("/static/tamas-logo.png");
+  float:left;
+  margin-top:10px;
+  margin-left: 10px;
 }
 
 .header{
-	height:100px;
+  height:100px;
 }
 
 .footer{
-	border:thin solid blue;
-	height:100px;
+
 }
 
 .left{
-	width:74%;
-	float:left;
-	height:100%;
+  width:74%;
+  float:left;
+  height:100%;
 }
 .right{
-	width:26%;
-	float:left;
+  width:26%;
+  float:left;
   height:100%;
 }
 #tabs2{
@@ -59,42 +61,211 @@ body{
 }
 
 .head-box{
-	width:150px;
-	float:right;
+  width:150px;
+  float:right;
 
 }
 
 .ui-tabs{
-	height:98%;
+  height:98%;
 }
 #DriversAvail{
  padding:0; 
  height:89%;
  overflow-y:scroll;
 }
-.drivers_avail{
+
+.drivers{
   width:100%;
   padding:0;
-  background:#c7c7c7;
+ 
   margin-top:5px;
   text-align:center;
   border-radius:0.3em;
   display:table;
 }
-.drivers_avail p{
-	margin:0;
+
+
+.drivers p{
+  margin:0;
   padding:0;
   display:table-cell;
   vertical-align:middle;
 }
+
+
+.drivers_avail{
+   background:#c7c7c7;
+}
+.drivers_uavail{
+  background:red;
+}
+
 .tableOfJobs{
   width:100%;
   background-color:#c7c7c7;
   border-radius: 5px 5px 0 0 ;
 }
 .tableOfJobs tbody tr{
- background-color:#aaaaaa; 
+
   text-align:center;
+}
+.form{
+ width:100%;
+  height:500px;
+  
+}
+.maps{
+ width:30%;
+  height:40%;
+  float:right;
+  border:thin solid;
+}
+
+.drag-head{
+ background:grey; 
+}
+.tableDrag{
+ width:150px;
+  height:90px;
+  text-align:center;
+  border:thin solid black;
+  background: white;
+  border-radius:5px;
+  z-index:1;
+}
+.drop-hover{
+  border: solid black;
+  border-width: 5px 1px;
+  cursor:copy;
+}
+
+.footer{
+  display: none;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  background:rgba(64,64,64,0.8); 
+  z-index: 8080;
+}
+.footer-inner{
+  position: relative;
+  background: white;
+  width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+  height: 90%;
+  margin-top: 25px;
+  border-radius: 5px;
+
+}
+.footer-inner img{
+  position:absolute;
+  top:-15px;
+  right:10px;
+  cursor:pointer;
+}
+.form,.form2{
+  display:none;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  background:rgba(64,64,64,0.8); 
+  z-index: 8080;
+}
+
+.form-inner, .acc-form{
+  position: relative;
+  background: white;
+  width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  height: 90%;
+  margin-top: 25px;
+  border-radius: 5px;
+  padding:20px;
+}
+
+.form-wrapper{
+  width:320px;
+}
+.pac-container{
+  z-index:9999;
+}
+
+input, .input {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  border:1px solid #ccc;
+  font-size:20px;
+  width:300px;
+  min-height:30px;
+  margin-bottom:15px;
+  margin-top:5px;
+  outline: none;
+
+  -webkit-border-radius:5px;
+  -moz-border-radius:5px;
+  -o-border-radius:5px;
+  -ms-border-radius:5px;
+  border-radius:5px;
+}
+:invalid { 
+  border-color: #e88;
+  -webkit-box-shadow: 0 0 5px rgba(255, 0, 0, .8);
+  -moz-box-shadow: 0 0 5px rbba(255, 0, 0, .8);
+  -o-box-shadow: 0 0 5px rbba(255, 0, 0, .8);
+  -ms-box-shadow: 0 0 5px rbba(255, 0, 0, .8);
+  box-shadow:0 0 5px rgba(255, 0, 0, .8);
+}
+
+:required {
+  border-color: #88a;
+  -webkit-box-shadow: 0 0 5px rgba(0, 0, 255, .5);
+  -moz-box-shadow: 0 0 5px rgba(0, 0, 255, .5);
+  -o-box-shadow: 0 0 5px rgba(0, 0, 255, .5);
+  -ms-box-shadow: 0 0 5px rgba(0, 0, 255, .5);
+  box-shadow: 0 0 5px rgba(0, 0, 255, .5);
+}
+.form-inner div{
+  float:left;
+}
+.date{
+  width:165px;
+  margin-right:20px;
+}
+.time{
+    width:110px;
+}
+.nopass{
+    width:100px;
+    margin-right:15px;
+}
+.select{
+    width:188px;
+    height:30px;
+    background:white;
 }
 
 
+.form-inner label{
+  display:block;
+}
+#custMap{
+  height:400px;
+  width:250px;
+}
+
+
+.red{
+  color:red;
+}
+.minibus{
+  background-color:#F75C9A;
+}
+.mobility{
+  background-color: #E0F75C;
+}
