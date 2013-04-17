@@ -24,7 +24,9 @@
 		    
 		  </div>
 		  <div id="tabs-2">
-		    <p>Table of past jobs here</p>
+		    {%block completeTable%}
+		    {%include "completedTable.html"%}
+		    {%endblock%}
 		  </div>
 		  <div id="tabs-3">
 		    <p>not to sure yet what to put here</p>
@@ -42,8 +44,8 @@
 		  </ul>
 		  <div id="DriversAvail">
 		    <!-- the current available drivers will show here. currently hard coded, this will come from the database eventually -->
-		    {%for d in drivers%}
-		    <div id="driver{{d.id}}" class="drivers_avail drivers"><p> {{d.driver.callsign}} <br/>{{d.driver.name}}</p><span class='hidden'>{{d.driver.id}}</span></div>
+		    {%for d in driversAvail%}
+		    <div id="driver{{d.id}}" class="drivers_avail drivers"><p> {{d.driver.callsign}} <br/>{{d.driver.name}}</p><span class='hidden driverid'>{{d.driver.id}}</span></div>
 		   
 		    {%endfor%}
 		  </div>
@@ -58,8 +60,16 @@
 		<!-- this will have a list of drivers on jobs -->
 		<div class="drivers_unavil">
 			<div class="driversU_head">
-				On jobs
+				Drivers On Jobs
 			</div>
+				{%for d in driversUnavail%}
+					{%for b in bookings%}
+						{%if d.driver.id == b.driver.id%}
+							<div id="driver{{d.id}}" class="drivers_uavail_inner drivers"><p> {{d.driver.callsign}} <br/>{{d.driver.name}}</p><span class='hidden driverid'>{{d.driver.id}}</span><span class="hidden jobid">{{b.id}}</span></div>
+		   				{%endif%}
+		   			{%endfor%}
+		    	{%endfor%}
+			
 		</div>
 		
 	</div>

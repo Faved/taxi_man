@@ -1,0 +1,8 @@
+Wednesday, 17. April 2013 09:26PM - faved - Preformed Cancel booking request on job id: 6
+Wednesday, 17. April 2013 09:26PM - faved - Preformed Cancel booking request on job id: 5
+Wednesday, 17. April 2013 09:32PM - faved - loaded all jobs from home
+Wednesday, 17. April 2013 09:33PM - faved - Added new booking to the database, added job id: 8
+Wednesday, 17. April 2013 09:34PM - faved - Preformed Cancel booking request on job id: 8
+Wednesday, 17. April 2013 09:34PM - faved - Dispatched job number: 7 to driver: 1
+Wednesday, 17. April 2013 09:34PM - faved - Cleared Job: 7
+Wednesday, 17. April 2013 09:37PM - faved - loaded all jobs from home

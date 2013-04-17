@@ -1,5 +1,5 @@
 
-<table class='tableOfJobs'>
+<table class='complete'>
 				<thead>
 		       		<tr>
 		          	    <th class='hidden'>ID</th>
@@ -12,7 +12,7 @@
 		    	    </tr>
 			    </thead>
 			    <tbody>
-			    	{% for booking in bookings %}
+			    	{% for booking in completebookings %}
 			    		{%if booking.account == None %}
 			    		   	{%if booking.vehicle_type == "Minibus"%} 	
 			    		   		<tr class='minibus'>

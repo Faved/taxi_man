@@ -13,6 +13,7 @@ urlpatterns = patterns('',
     url(r'^time/$','tamas.views.time'),
     # This url is for the table, so that i can be refreshed.
     url(r'^table/$','tamas.views.table'),
+    url(r'^cleartable/$','tamas.views.cleartable'),
     url(r'^create/$','tamas.views.create'),
     url(r'^test/$','tamas.views.test'),
     url(r'^add/$','tamas.views.add'),
@@ -20,6 +21,10 @@ urlpatterns = patterns('',
     # add driver to job
     url(r'^addDriverToBooking/$','tamas.views.addDriverToBooking'),
     url(r'^setBookingClear/$','tamas.views.setBookingClear'),
+    url(r'^getBookingInfo/$','tamas.views.getBookingInfo'),
+    url(r'^cancelBooking/$','tamas.views.cancelBooking'),
+    url(r'^removeFromJob/$','tamas.views.removeFromJob'),
+    
 
 
 

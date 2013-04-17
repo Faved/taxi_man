@@ -48,6 +48,8 @@ class Driver(models.Model):
 	contact_number 		= models.CharField(max_length=50)
 	badge_number 		= models.CharField(max_length=50)
 	driver_type 		= models.CharField(max_length=20,choices=DRIVER_CHOICES)
+	def __unicode__(self):
+		return self.name+" "+self.callsign
 
 #Driver Rota Table
 class Driver_rotas(models.Model):
@@ -93,6 +95,7 @@ class Booking(models.Model):
 	complete 			= models.BooleanField()
 	date 				= models.DateField()
 	account 			= models.ForeignKey(Account, null=True,blank=True)
+	cancelled			= models.BooleanField()
 	def __unicode__(self):
 		return unicode(self.id)
 

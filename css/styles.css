@@ -103,12 +103,12 @@ body{
   background:red;
 }
 
-.tableOfJobs{
+.tableOfJobs, .complete{
   width:100%;
   background-color:#c7c7c7;
   border-radius: 5px 5px 0 0 ;
 }
-.tableOfJobs tbody tr{
+.tableOfJobs tbody tr, .complete tbody tr{
 
   text-align:center;
 }
@@ -270,4 +270,11 @@ input, .input {
 }
 .mobility{
   background-color: #E0F75C;
+}
+.qtip-title{
+  text-align: center;
+}
+.dispatch_status img{
+  width:20px;
+  height: 20px;
 }
