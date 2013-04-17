@@ -2,15 +2,17 @@ body{
   font-family: Verdana,Arial,sans-serif;
   font-size: 0.6em;
   line-height:1.8em;
+  background:url('/static/grey_wash_wall.png');
 }
 .hidden{
   display:none;
 }
 .container{
   margin:0 auto;
-  
+  background-color: white;
   width:1000px;
-  border:thin solid red;
+  border:thin solid black;
+  border-radius: 15px;
 }
 .content{
   height:500px;
@@ -97,7 +99,7 @@ body{
 .drivers_avail{
    background:#c7c7c7;
 }
-.drivers_uavail{
+.drivers_uavail_inner{
   background:red;
 }
 

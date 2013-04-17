@@ -10,13 +10,13 @@ from tamas.models import *
 import datetime
 from datetime import date, time, timedelta
 
-@login_required (login_url='/login/')
+@login_required
 def home(request):
 	now = datetime.datetime.now()
 	# need to filter the results for that day and order them by the time.
 	startdate = date.today()
 	enddate = startdate + timedelta(days=1)
-	bookings = Booking.objects.filter(complete=0,date__range=[startdate, enddate]).order_by('pickup_time')
+	bookings = Booking.objects.filter(complete=0,driver=None,date__range=[startdate, enddate]).order_by('pickup_time')
 	# need to also get the driver details for who is on rota today. TODO - need some sort of mechanisim to work on the times
 	drivers = Rotas.objects.filter(date__range=[startdate,enddate])
 	t = get_template('content.html')
@@ -55,11 +55,11 @@ def api(request):
 		message = "fail"
 	return HttpResponse(message)
 
-# This is the url calll to add a booking, it is simalar to the api call.
+# This is the url call to add a booking, it is simalar to the api call.
 @csrf_exempt
 def add(request):
 	if request.method == 'POST':
-		data = simplejson.loads(request.body);
+		data = simplejson.loads(request.body)
 		# access the object data by doing data['value name']
 		# create a date object
 		date_array = data['date'].split('-')
@@ -72,12 +72,42 @@ def add(request):
 		tempdate2 = datetime.datetime.combine(tempdate,pickup_time)
 		temp_leavedatetime = tempdate2 - timedelta(seconds=data['travelTime'])
 		leave_time = temp_leavedatetime.time()
-		print leave_time
-		
+		# need to getthe user who is submitting
+		user = request.user
+		# lets make a booking object
+		b = Booking(pickup_address=data['pickup'],destin_address=data['destination'],date=jobDate,leave_time=leave_time,pickup_time=pickup_time,entered_by=user,no_passengers=data['num_of_pass'],customer_name=data['cus_name'],vehicle_type=data['vehicle'])
+		b.save()
+		return HttpResponse("added")
+	else:
+		return HttpResponse("incorrect format")
+
+
+# this is the url call to add a driver to a booking
+@csrf_exempt
+def addDriverToBooking(request):
+	if request.method == 'POST':
+		data = simplejson.loads(request.body)
+		b = Booking.objects.get(id=int(data['jobid']))
+		d = Driver.objects.get(id=int(data['driverid']))
+		b.driver = d
+		b.save()
 	return HttpResponse("OK")
 
+#This is to set a job as "clear" ie complete
+@csrf_exempt
+def setBookingClear(request):
+	if request.method == 'POST':
+		jobno = simplejson.loads(request.body)
+		b = Booking.objects.get(id=int(jobno)) 
+		b.complete = True
+		b.save()
+
+	return HttpResponse("OK")
+
+
 def login(request):
-	return render_to_response('login.html')
+	return render_to_response('login.html',
+        context_instance=RequestContext(request))
 
 
 

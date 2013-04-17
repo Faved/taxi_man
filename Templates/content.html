@@ -43,7 +43,7 @@
 		  <div id="DriversAvail">
 		    <!-- the current available drivers will show here. currently hard coded, this will come from the database eventually -->
 		    {%for d in drivers%}
-		    <div id="driver{{d.id}}" class="drivers_avail drivers"><p> {{d.driver.callsign}} <br/>{{d.driver.name}}</p></div>
+		    <div id="driver{{d.id}}" class="drivers_avail drivers"><p> {{d.driver.callsign}} <br/>{{d.driver.name}}</p><span class='hidden'>{{d.driver.id}}</span></div>
 		   
 		    {%endfor%}
 		  </div>

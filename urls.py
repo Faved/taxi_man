@@ -16,8 +16,17 @@ urlpatterns = patterns('',
     url(r'^create/$','tamas.views.create'),
     url(r'^test/$','tamas.views.test'),
     url(r'^add/$','tamas.views.add'),
-    url(r'^login/$', 'django.contrib.auth.views.login',
-        {'template_name': 'login.html', 'redirect_field_name': '/'}),
+
+    # add driver to job
+    url(r'^addDriverToBooking/$','tamas.views.addDriverToBooking'),
+    url(r'^setBookingClear/$','tamas.views.setBookingClear'),
+
+
+
+    # account stuff
+    url(r'^accounts/login/$', 'django.contrib.auth.views.login',{'template_name': 'login.html'}),
+    url(r'^logout/$', 'django.contrib.auth.views.logout', {'next_page': '/'}),
+
    
 
     # Uncomment the admin/doc line below to enable admin documentation:

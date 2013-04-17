@@ -1,17 +1,13 @@
-<!-- {% for t in tests %}
-	{{t.id}}
-{% endfor %}
- -->
 
 <table class='tableOfJobs'>
 				<thead>
 		       		<tr>
-		          	    <th>ID</th>
-			            <th>Time</th>
+		          	    <th class='hidden'>ID</th>
+			            <th>Leave Time</th>
+			            <th>Pickup Time</th>
 			            <th>Pickup</th>
 			            <th>Destination</th>
-			            <th>Distance</th>
-			            <th>Job Time</th>
+			            <th>Alias</th>
 		    	    </tr>
 			    </thead>
 			    <tbody>
@@ -24,12 +20,12 @@
 			    		   	{%else%}
 			    		   		<tr>
 			    		   	{%endif%}
-						    		<td>{{booking.id}}</td>
-						    		<td>{{booking.pickup_time}}</td>
-						    		<td>Asda, Bodmin</td>
-						    		<td>Bodmin,Hosp</td>
-						    		<td>2 Miles</td>
-						    		<td>5 mins</td>
+						    		<td class='hidden'>{{booking.id}}</td>
+						    		<td>{{booking.leave_time|time:"H:i"}}</td>
+						    		<td>{{booking.pickup_time|time:"H:i"}}</td>
+						    		<td>{{booking.pickup_address}}</td>
+						    		<td>{{booking.destin_address}}</td>
+						    		<td>Local</td>
 					    	</tr>
 					    {%else%}
 					    	{%if booking.vehicle_type == "Minibus"%} 	
@@ -37,16 +33,17 @@
 			    		   	{%elif booking.vehicle_type == "Mobility"%}
 			    		   		<tr class='red mobility'>
 			    		   	{%else%}
-			    		   		<tr>
+			    		   		<tr class='red'>
 			    		   	{%endif%}
-						    		<td>{{booking.id}}</td>
-						    		<td>12:30</td>
-						    		<td>Asda, Bodmin</td>
-						    		<td>Bodmin,Hosp</td>
-						    		<td>2 Miles</td>
-						    		<td>5 mins</td>
+						    		<td class='hidden'>{{booking.id}}</td>
+						    		<td>{{booking.leave_time|time:"H:i"}}</td>
+						    		<td>{{booking.pickup_time|time:"H:i"}}</td>
+						    		<td>{{booking.pickup_address}}</td>
+						    		<td>{{booking.destin_address}}</td>
+						    		<td>{{booking.account.alias}}</td>
 						    	</tr>
 			    		{%endif%}
 			        {%endfor%}
 			    </tbody>
 			</table>
+
