@@ -22,6 +22,8 @@ class Account(models.Model):
 	billing_city 		= models.CharField(max_length=50)
 	billing_county 		= models.CharField(max_length=50)
 	billing_postcode 	= models.CharField(max_length=20)
+	def __unicode__(self):
+		return self.name+" | "+self.alias+" | "+self.ref_no
 
 #User
 # class User(models.Model):
@@ -55,17 +57,23 @@ class Driver(models.Model):
 class Driver_rotas(models.Model):
 	start_time 			= models.TimeField()
 	end_time 			= models.TimeField()
+	def __unicode__(self):
+		return "Start Time: "+self.start_time.strftime("%H:%M:%S %Z")+" | End time:"+self.end_time.strftime("%H:%M:%S %Z")
 
 #Rota Table
 class Rotas(models.Model):
 	date 				= models.DateField()
 	driver 				= models.ForeignKey(Driver)
 	rota 				= models.ForeignKey(Driver_rotas)
+	def __unicode__(self):
+		return self.date.strftime("%d/%m/%y")+" | "+self.driver.name+"("+self.driver.callsign+") | Start Time: "+self.rota.start_time.strftime("%H:%M:%S %Z")+" | End time:"+self.rota.end_time.strftime("%H:%M:%S %Z")
 
 #Esort Table
 class Escort(models.Model):
 	name 				= models.CharField(max_length=100)
 	contact 			= models.CharField(max_length=100)
+	def __unicode__(self):
+		return self.name
 
 #Booking Table - props the main table thats used!
 class Booking(models.Model):
@@ -97,7 +105,7 @@ class Booking(models.Model):
 	account 			= models.ForeignKey(Account, null=True,blank=True)
 	cancelled			= models.BooleanField()
 	def __unicode__(self):
-		return unicode(self.id)
+		return self.date.strftime("%d/%m/%y")+" | "+self.pickup_time.strftime("%H:%M:%S %Z")+" | Pickup: "+self.pickup_address+" | Destination: "+self.destin_address
 
 #contract table
 class Contract(models.Model):
