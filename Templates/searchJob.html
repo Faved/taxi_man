@@ -1,0 +1,43 @@
+<form id='jobSearch'>
+	<div class='searchinner'>
+		<div id='startDate'>
+			<label>Start Date:</date>
+			<input type='date' id='start_date' required>
+		</div>
+		<div id='endDate'>
+			<label>End Date:</label>
+			<input type='date' id='end_date' required>
+		</div>
+		<div id='accountSearch'>
+			<label>Account:</label>
+			<select id='account_search' class='accountselect input '>
+				<!-- dangjo stuff -->
+				<option>None</option>
+				{%for a in accounts%}
+					<option>{{a.name}} | {{a.alias}} | {{a.ref_no}}</option>
+				{%endfor%}
+			</select>
+		</div>
+
+		<div id='driverSearch'>
+			<label>Driver:</label>
+			<select id='driver_search' class='driverselect input '>
+				<!-- dangjo stuff -->
+				<option>None</option>
+				{%for a in allDrivers%}
+					<option>{{a.name}} | {{a.callsign}}</option>
+				{%endfor%}
+			</select>
+		</div>
+
+		<input type='submit' id='searchSubmit' value='search'>
+	</div>
+</form>
+<div id='results'>
+	<div id='results-inner'>
+
+	{%block resultTable%}
+				{% include "resulttable.html" %}
+			{%endblock%}
+</div>
+</div>

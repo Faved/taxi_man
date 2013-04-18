@@ -1,0 +1,58 @@
+<table class='results'>
+				<thead>
+		       		<tr>
+		          	    <th class='hidden'>ID</th>
+			            <th><div class='leavetime'>Leave Time</div></th>
+			            <th><div class='pickuptime'>Pickup Time</div></th>
+			            <th><div class='pickup'>Pickup</div></th>
+			            <th><div class='destin'>Destination</div></th>
+			            <th><div class='alias'>Alias</div></th>
+			            <th><div class='dispatched'>Dispatched</div></th>
+		    	    </tr>
+			    </thead>
+			    <tbody>
+			    	{% for booking in results %}
+			    		{%if booking.account == None %}
+			    		   	{%if booking.vehicle_type == "Minibus"%} 	
+			    		   		<tr class='minibus'>
+			    		   	{%elif booking.vehicle_type == "Mobility"%}
+			    		   		<tr class='mobility'>
+			    		   	{%else%}
+			    		   		<tr>
+			    		   	{%endif%}
+						    		<td class='hidden jobid'>{{booking.id}}</td>
+						    		<td><div class='leavetime'>{{booking.leave_time|time:"H:i"}}</div></td>
+						    		<td><div class='pickuptime'>{{booking.pickup_time|time:"H:i"}}</div></td>
+						    		<td class='midtable'><div class='pickup'>{{booking.pickup_address}}</div></td>
+						    		<td><div class='destin'>{{booking.destin_address}}</div></td>
+						    		<td><div class='alias'>Local</div></td>
+						    		{%if booking.driver == None%}
+						    			<td class='dispatch_status'><div class='dispatched'><img src='/static/Cross-32.png'/></div></td>
+						    		{%else%}
+						    			<td class='dispatch_status'><div class='dispatched'><img src='/static/Tick-32.png'/></div></td>
+						    		{%endif%}
+					    	</tr>
+					    {%else%}
+					    	{%if booking.vehicle_type == "Minibus"%} 	
+			    		   		<tr class='red minibus'>
+			    		   	{%elif booking.vehicle_type == "Mobility"%}
+			    		   		<tr class='red mobility'>
+			    		   	{%else%}
+			    		   		<tr class='red'>
+			    		   	{%endif%}
+						    		<td class='hidden jobid'>{{booking.id}}</td>
+						    		<td><div class='leavetime'>{{booking.leave_time|time:"H:i"}}</div></td>
+						    		<td><div class='pickuptime'>{{booking.pickup_time|time:"H:i"}}</div></td>
+						    		<td class='midtable'><div class='pickup'>{{booking.pickup_address}}</div></td>
+						    		<td><div class='destin'>{{booking.destin_address}}</div></td>
+						    		<td><div class='alias'>{{booking.account.alias}}</div></td>
+						    		{%if booking.driver == None%}
+						    			<td class='dispatch_status'><div class='dispatched'><img src='/static/Cross-32.png'/></div></td>
+						    		{%else%}
+						    			<td class='dispatch_status'><div class='dispatched'><img src='/static/Tick-32.png'/></div></td>
+						    		{%endif%}
+						    	</tr>
+			    		{%endif%}
+			        {%endfor%}
+			    </tbody>
+			</table>
