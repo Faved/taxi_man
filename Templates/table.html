@@ -3,12 +3,13 @@
 				<thead>
 		       		<tr>
 		          	    <th class='hidden'>ID</th>
-			            <th>Leave Time</th>
-			            <th>Pickup Time</th>
-			            <th>Pickup</th>
-			            <th>Destination</th>
-			            <th>Alias</th>
-			            <th>Dispatched</th>
+			            <th><div class='leavetime'>Leave Time</div></th>
+			            <th><div class='pickuptime'>Pickup Time</div></th>
+			            <th><div class='pickup'>Pickup</div></th>
+			            <th><div class='destin'>Destination</div></th>
+			            <th><div class='alias'>Alias</div></th>
+			            <th><div class='dispatched'>Dispatched</div></th>
+			            <th class='hidden'>num of escorts</th>
 		    	    </tr>
 			    </thead>
 			    <tbody>
@@ -22,16 +23,17 @@
 			    		   		<tr>
 			    		   	{%endif%}
 						    		<td class='hidden jobid'>{{booking.id}}</td>
-						    		<td>{{booking.leave_time|time:"H:i"}}</td>
-						    		<td>{{booking.pickup_time|time:"H:i"}}</td>
-						    		<td class='midtable'>{{booking.pickup_address}}</td>
-						    		<td>{{booking.destin_address}}</td>
-						    		<td>Local</td>
+						    		<td><div class='leavetime'>{{booking.leave_time|time:"H:i"}}</div></td>
+						    		<td><div class='pickuptime'>{{booking.pickup_time|time:"H:i"}}</div></td>
+						    		<td class='midtable'><div class='pickup'>{{booking.pickup_address}}</div></td>
+						    		<td><div class='destin'>{{booking.destin_address}}</div></td>
+						    		<td><div class='alias'>Local</div></td>
 						    		{%if booking.driver == None%}
-						    			<td class='dispatch_status'><img src='/static/Cross-32.png'/></td>
+						    			<td class='dispatch_status'><div class='dispatched'><img src='/static/Cross-32.png'/></div></td>
 						    		{%else%}
-						    			<td class='dispatch_status'><img src='/static/Tick-32.png'/></td>
+						    			<td class='dispatch_status'><div class='dispatched'><img src='/static/Tick-32.png'/></div></td>
 						    		{%endif%}
+						    		<td class='hidden num_escorts'>{{booking.num_escorts}}</td>
 					    	</tr>
 					    {%else%}
 					    	{%if booking.vehicle_type == "Minibus"%} 	
@@ -42,16 +44,17 @@
 			    		   		<tr class='red'>
 			    		   	{%endif%}
 						    		<td class='hidden jobid'>{{booking.id}}</td>
-						    		<td>{{booking.leave_time|time:"H:i"}}</td>
-						    		<td>{{booking.pickup_time|time:"H:i"}}</td>
-						    		<td class='midtable'>{{booking.pickup_address}}</td>
-						    		<td>{{booking.destin_address}}</td>
-						    		<td>{{booking.account.alias}}</td>
+						    		<td><div class='leavetime'>{{booking.leave_time|time:"H:i"}}</div></td>
+						    		<td><div class='pickuptime'>{{booking.pickup_time|time:"H:i"}}</div></td>
+						    		<td class='midtable'><div class='pickup'>{{booking.pickup_address}}</div></td>
+						    		<td><div class='destin'>{{booking.destin_address}}</div></td>
+						    		<td><div class='alias'>{{booking.account.alias}}</div></td>
 						    		{%if booking.driver == None%}
-						    			<td class='dispatch_status'><img src='/static/Cross-32.png'/></td>
+						    			<td class='dispatch_status'><div class='dispatched'><img src='/static/Cross-32.png'/></div></td>
 						    		{%else%}
-						    			<td class='dispatch_status'><img src='/static/Tick-32.png'/></td>
+						    			<td class='dispatch_status'><div class='dispatched'><img src='/static/Tick-32.png'/></div></td>
 						    		{%endif%}
+						    		<td class='hidden num_escorts'>{{booking.num_escorts}}</td>
 						    	</tr>
 			    		{%endif%}
 			        {%endfor%}
