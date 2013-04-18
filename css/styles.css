@@ -102,15 +102,66 @@ body{
 .drivers_uavail_inner{
   background:red;
 }
-
-.tableOfJobs, .complete{
+#results, #jobsTable,#completedTable{
+  position:relative;
+  padding-top: 1.7em; 
+}
+#jobsTable-inner,#completedTable-inner{
+  height:400px;
+  overflow:auto;
+  overflow-x:hidden;
+}
+#results-inner{
+ height:220px;
+  overflow:auto;
+  overflow-x:hidden;
+}
+.results thead tr,.tableOfJobs thead tr,.complete thead tr{
+  left:0;
+  top:0;
+  position:absolute;
+    background-color:#c7c7c7;
+  border-radius:5px 5px 0 0;
+}
+.results .leavetime, .tableOfJobs .leavetime, .complete .leavetime{
+ width: 75px;
+  text-align:center;
+}
+.results .pickuptime, .tableOfJobs .pickuptime, .complete .pickuptime{
+ width: 79px; 
+  text-align:center;
+}
+.results .pickup, .tableOfJobs .pickup, .complete .pickup{
+  width:200px;
+  text-align:center;
+}
+.results .destin, .tableOfJobs .destin, .complete .destin{
+  width: 200px;
+  text-align:center;
+}
+.results .alias, .tableOfJobs .alias, .complete .alias{
+  width: 64px;
+  text-align:center;
+}
+.results .dispatched, .tableOfJobs .dispatched, .complete .dispatched{
+ width:74px;
+  text-align:center;
+}
+.tableOfJobs, .complete,.results{
   width:100%;
   background-color:#c7c7c7;
   border-radius: 5px 5px 0 0 ;
+  border-collapse:collapse;
 }
-.tableOfJobs tbody tr, .complete tbody tr{
+
+.tableOfJobs thead th, .complete thead th,.results thead th{
+  border-bottom: thin solid black;
+  text-align:center;
+}
+.tableOfJobs tbody tr, .complete tbody tr,.results tbody tr{
 
   text-align:center;
+  border-bottom:thin solid black;
 }
 .form{
  width:100%;
@@ -180,19 +231,31 @@ body{
   z-index: 8080;
 }
 
-.form-inner, .acc-form{
+.form-inner{
   position: relative;
   background: white;
   width: 600px;
   margin-left: auto;
   margin-right: auto;
-  height: 90%;
+  height: 80%;
   margin-top: 25px;
   border-radius: 5px;
   padding:20px;
 }
+.form-inner img{
+  position:absolute;
+  top:-15px;
+  right:10px;
+  cursor:pointer;
+}
 
-.form-wrapper{
+#bookingForm{
+ float:left;
+  width:320px;
+  margin-right:10px;
+}
+
+.form-wrapper, .acc-form{
   width:320px;
 }
 .pac-container{
@@ -278,3 +341,39 @@ input, .input {
   width:20px;
   height: 20px;
 }
+.es{
+ width:230px; 
+}
+.dia_p{
+  height:20px;
+  float:left;
+}
+.searchinner{
+ width:77%; 
+
+  margin:0 auto;
+}
+.searchinner div{
+ width:250px;
+  float:left;
+  margin:10px;
+  height:50px;
+}
+.searchinner input, .searchinner select{
+   width:200px;
+
+}
+.searchinner label{
+ display:block; 
+
+}
+#searchSubmit {
+ clear:both;
+margin-left:30%;
+}
+
+
+
+
+
+
