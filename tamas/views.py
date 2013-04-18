@@ -18,8 +18,11 @@ def home(request):
 	# need to filter the results for that day and order them by the time.
 	startdate = date.today()
 	enddate = startdate + timedelta(days=1)
-	bookings = Booking.objects.filter(complete=0,cancelled=0,date__range=[startdate, enddate]).order_by('pickup_time')
-	completeBookings = Booking.objects.filter(complete=1,cancelled=0,date__range=[startdate, enddate]).order_by('pickup_time')
+	bookings = Booking.objects.filter(complete=0,cancelled=0,date__range=[startdate, enddate]).order_by('leave_time')
+	completeBookings = Booking.objects.filter(complete=1,cancelled=0,date__range=[startdate, enddate]).order_by('leave_time')
+	alldrivers = Driver.objects.all()
+	escorts = Escort.objects.all()
+	accounts = Account.objects.all()
 	# need to also get the driver details for who is on rota today. TODO - need some sort of mechanisim to work on the times
 	drivers = Rotas.objects.filter(date__range=[startdate,enddate])
 	# we need to split the drivers into on jobs and available...
@@ -36,7 +39,7 @@ def home(request):
 			driverAvail.append(d)
 	
 	t = get_template('content.html')
-	html = t.render(Context({'time':now,'bookings':bookings,'driversAvail':driverAvail,"driversUnavail":driverBusy,"completebookings":completeBookings}))
+	html = t.render(Context({'time':now,'bookings':bookings,'driversAvail':driverAvail,"driversUnavail":driverBusy,"completebookings":completeBookings,"accounts":accounts,"escorts":escorts,"allDrivers":alldrivers}))
 	# log it
 	log.debug(request.user.username+' - loaded all jobs from home')
 	return HttpResponse(html)
@@ -46,7 +49,7 @@ def table(request):
 	# need to filter the results for that day and order them by the time.
 	startdate = date.today()
 	enddate = startdate + timedelta(days=1)
-	bookings = Booking.objects.filter(complete=0,cancelled=0,date__range=[startdate, enddate]).order_by('pickup_time')
+	bookings = Booking.objects.filter(complete=0,cancelled=0,date__range=[startdate, enddate]).order_by('leave_time')
 	t = get_template('table.html')
 	html = t.render(Context({'time':now,'bookings':bookings}))
 	return HttpResponse(html)
@@ -56,10 +59,45 @@ def cleartable(request):
 	# need to filter the results for that day and order them by the time.
 	startdate = date.today()
 	enddate = startdate + timedelta(days=1)
-	bookings = Booking.objects.filter(complete=1,cancelled=0,date__range=[startdate, enddate]).order_by('pickup_time')
+	bookings = Booking.objects.filter(complete=1,cancelled=0,date__range=[startdate, enddate]).order_by('leave_time')
 	t = get_template('completedTable.html')
 	html = t.render(Context({'time':now,'completebookings':bookings}))
 	return HttpResponse(html)
+
+# search form 
+@csrf_exempt
+def search(request):
+	if request.method == 'POST':
+		data = simplejson.loads(request.body)
+		# create a date object
+		date_array = data['startdate'].split('-')
+		print date_array
+		startdate = datetime.date(int(date_array[0]),int(date_array[1]),int(date_array[2]))
+		# create a date object
+		date_array = data['enddate'].split('-')
+		enddate = datetime.date(int(date_array[0]),int(date_array[1]),int(date_array[2]))
+		driver = data['driver']
+		account = data['account']
+		tempacc = account.split('|')
+		tempdriver = driver.split('|')
+		
+		if driver != "None" and account != "None":
+			print "i am here"
+			acc = Account.objects.filter(name=tempacc[0].strip(),alias=tempacc[1].strip(),ref_no=tempacc[2].strip())
+			drive = Driver.objects.filter(name=tempdriver[0].strip(),callsign=tempdriver[1].strip())
+			bookings = Booking.objects.filter(date__range=[startdate,enddate],account=acc,driver=drive)
+		elif driver != 'None' and account == 'None':
+			drive = Driver.objects.filter(name=tempdriver[0].strip(),callsign=tempdriver[1].strip())
+			bookings = Booking.objects.filter(date__range=[startdate,enddate],driver=drive)
+		elif driver == 'None' and account != 'None':
+			acc = Account.objects.filter(name=tempacc[0].strip(),alias=tempacc[1].strip(),ref_no=tempacc[2].strip())
+			bookings = Booking.objects.filter(date__range=[startdate,enddate],account=acc)
+		else:
+			bookings = Booking.objects.all()
+
+		t = get_template('resulttable.html')
+		html = t.render(Context({"results":bookings}))
+		return HttpResponse(html)
 
 @csrf_exempt	
 def api(request):
@@ -95,16 +133,29 @@ def add(request):
 		# create a time object for leave time....
 		temptime = data['time'].split(':')
 		pickup_time = datetime.time(int(temptime[0]),int(temptime[1]))
-		# to make it work we need to create a datetime object frm the time
-		tempdate = datetime.date(2010,8,27)
-		tempdate2 = datetime.datetime.combine(tempdate,pickup_time)
-		temp_leavedatetime = tempdate2 - timedelta(seconds=data['travelTime'])
-		leave_time = temp_leavedatetime.time()
+		if int(data['travelTime']) < 5 or data['travelTime'] =='':
+			leave_time = pickup_time
+		else:
+			# to make it work we need to create a datetime object frm the time
+			tempdate = datetime.date(2010,8,27)
+			tempdate2 = datetime.datetime.combine(tempdate,pickup_time)
+			temp_leavedatetime = tempdate2 - timedelta(seconds=data['travelTime'])
+			leave_time = temp_leavedatetime.time()
 		# need to getthe user who is submitting
 		user = request.user
-		# lets make a booking object
-		b = Booking(pickup_address=data['pickup'],destin_address=data['destination'],date=jobDate,leave_time=leave_time,pickup_time=pickup_time,entered_by=user,no_passengers=data['num_of_pass'],customer_name=data['cus_name'],vehicle_type=data['vehicle'])
-		b.save()
+		# 
+		# find out if account of not
+		if data['isaccount'] == 'true':
+			tempaccountdata = data['account'].split('|')
+			theaccount = Account.objects.filter(name=tempaccountdata[0].strip(),alias=tempaccountdata[1].strip(),ref_no=tempaccountdata[2].strip())
+
+			print theaccount
+			# lets make a booking object
+			b = Booking(pickup_address=data['pickup'],account=theaccount[0],num_escorts=int(data['num_escorts']),customer_number=data['cus_contact'],extra_info=data['moreinfo'],destin_address=data['destination'],date=jobDate,leave_time=leave_time,pickup_time=pickup_time,entered_by=user,no_passengers=data['num_of_pass'],customer_name=data['cus_name'],vehicle_type=data['vehicle'])
+			b.save()
+		else:
+			b = Booking(pickup_address=data['pickup'],num_escorts=int(data['num_escorts']),customer_number=data['cus_contact'],extra_info=data['moreinfo'],destin_address=data['destination'],date=jobDate,leave_time=leave_time,pickup_time=pickup_time,entered_by=user,no_passengers=data['num_of_pass'],customer_name=data['cus_name'],vehicle_type=data['vehicle'])
+			b.save()
 		# log it
 		log.debug(request.user.username+' - Added new booking to the database, added job id: '+unicode(b.pk))
 		return HttpResponse("added")
@@ -151,6 +202,20 @@ def addDriverToBooking(request):
 		data = simplejson.loads(request.body)
 		b = Booking.objects.get(id=int(data['jobid']))
 		d = Driver.objects.get(id=int(data['driverid']))
+		if b.num_escorts > 0:
+			e = Escort.objects.filter(name=data['escort1'])
+			print data
+			b.escort_id = e[0]
+			if b.num_escorts > 1:
+				e = Escort.objects.filter(name=data['escort2'])
+				b.escort_id_2 = e[0]
+				if b.num_escorts > 2:
+					e = Escort.objects.filter(name=data['escort3'])
+					b.escort_id_3 = e[0]
+					if b.num_escorts > 3:
+						e = Escort.objects.filter(name=data['escort4'])
+						b.escort_id_4 = e[0]
+
 		b.driver = d
 		b.save()
 		# log it

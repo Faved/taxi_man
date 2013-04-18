@@ -16,6 +16,7 @@ urlpatterns = patterns('',
     url(r'^cleartable/$','tamas.views.cleartable'),
     url(r'^create/$','tamas.views.create'),
     url(r'^test/$','tamas.views.test'),
+    url(r'^search/$','tamas.views.search'),
     url(r'^add/$','tamas.views.add'),
 
     # add driver to job
@@ -24,7 +25,7 @@ urlpatterns = patterns('',
     url(r'^getBookingInfo/$','tamas.views.getBookingInfo'),
     url(r'^cancelBooking/$','tamas.views.cancelBooking'),
     url(r'^removeFromJob/$','tamas.views.removeFromJob'),
-    
+
 
 
 
