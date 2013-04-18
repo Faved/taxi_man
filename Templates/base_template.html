@@ -51,6 +51,45 @@
 	<div id="dialog-confirm" title="Cancel?" class='hidden'>
 		<p><span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>Cancel this booking?</p>
 	</div>
+	<div id="dialog-escort" title="Choose Escorts" class='hidden'>
+		<p class='dia_p'><span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>Please pick escorts for booking:</p>
+		<div id='es1' class='es hidden'>
+			<label>Escort 1:</label>
+			<select id='esc1' class='input select'>
+				{%for e in escorts%}
+				<option>{{e.name}}</option>
+				{%endfor%}
+			</select>
+
+		</div>
+		<div id='es2'class='es hidden'>
+			<label>Escort 2:</label>
+			<select id='esc2'class='input select'>
+				{%for e in escorts%}
+				<option>{{e.name}}</option>
+				{%endfor%}
+			</select>
+
+		</div>
+		<div id='es3'class='es hidden'>
+			<label>Escort 3:</label>
+			<select id='esc3' class='input select'>
+				{%for e in escorts%}
+				<option>{{e.name}}</option>
+				{%endfor%}
+			</select>
+
+		</div>
+		<div id='es4' class='es hidden'>
+			<label>Escort 4:</label>
+			<select id='esc4' class='input select'>
+				{%for e in escorts%}
+				<option>{{e.name}}</option>
+				{%endfor%}
+			</select>
+
+		</div>
+	</div>
 </div>
 {%block addbooking%}
 {%include "create.html"%}
