@@ -10,27 +10,38 @@ $(function() {
 		$('.form').show('clip');
 		loadmap();
 		//now to change its postition so that it is at the top...
+		var d = new Date();
+		var currentHours = d.getHours(); 
+		currentHours = ( currentHours < 10 ? "0" : "" ) + currentHours;
+		document.getElementById('time_input').value = currentHours+":"+d.getMinutes();
 		});   
-	$('.lol').click(function(){
-		$('.form').hide('clip');
-	});
 	$(document).keyup(function(e){
 		if(e.which == 27)
 		{
 			if($('.form').css('display') != 'none')
+			{
 				$('.form').hide('clip');
+				
+			}	
+
 		};
 		if(e.which == 66 && e.ctrlKey)
 		{
 			$('.form').show('clip');
 			loadmap();
+			var d = new Date();
+			var currentHours = d.getHours(); 
+			currentHours = ( currentHours < 10 ? "0" : "" ) + currentHours;
+			document.getElementById('time_input').value = currentHours+":"+d.getMinutes();
 		};
 	});
-	$('.footer-inner img').click(function(){
+	$('.form-inner img').click(function(){
 		$('.form').hide('clip');
+		$('#bookingForm').find("input[type=text], textarea").val("");
 	});
-
-	$('#date_input').val(new Date().toJSON().slice(0,10));
+	var d = new Date();
+	$('#date_input').val(d.toJSON().slice(0,10));
+	
 
     //this is a test to see a clock in the corner.
 	var inters = setInterval(
@@ -72,23 +83,42 @@ $(function() {
                     pacContainerInitialized = true; 
             } 
     }); 	
+/*****************************************************************************************************
+
+Search Form
+******************************************************************************************************/
+$('#jobSearch').submit(function(event){
+	// cancels the form submission
+    event.preventDefault();
+    var search = new Object();
+    search.startdate = $('#start_date').val();
+    search.enddate = $('#end_date').val();
+    search.driver = $('#driver_search').val();
+    search.account = $('#account_search').val();
+    console.log(search);
+	$.ajax({
+        	url: '/search/',
+        	type: 'POST',
+        	contentType: 'application/json; charset=utf-8',
+        	data: JSON.stringify(search),
+        	dataType: 'text',
+        	success: function(result) 
+        	{
+        		console.log(result);
+        		$('.results').html(result);          		
+	       	}
+		});
 
 
+});
+/*****************************************************************************************************
 
-    // Code to add a booking from the create booking screen TODO- add accounts
-    $('#submitBooking').click(function(){
-    	//alert($('#isAccount').val());
-    	if($('#is_Account').prop('checked'))
-    	{
-    		//hid current form and show the account one.... which i need to write still.....
-    		$('.form-inner').hide('slide',{ direction: "left" }, 1000);
-    		$('.acc-form').show('slide', { direction: "right" }, 1000);
-
-    	}
-    	else
-    	{
-
-    		// need all the available details from the form.
+Submit a booking
+******************************************************************************************************/
+$('#bookingForm').submit(function(event){
+    // cancels the form submission
+    event.preventDefault();
+    // need all the available details from the form.
     		//TODO: work out the leave time.
     		var pickup = $('#pickup_input').val();
 	    	
@@ -105,7 +135,15 @@ $(function() {
 	    		booking.destination = $('#destin_input').val();
 	    		booking.num_of_pass = $('#pass_no_input').val();
 	    		booking.cus_name = $('#cust_name_input').val();
+	    		booking.cus_contact = $('#cust_contact_input').val();
 	    		booking.vehicle = $('#vehicle_input').val();
+	    		if($('#is_Account').prop('checked'))
+	    			booking.isaccount = 'true';
+	    		else
+	    			booking.isaccount = 'false';
+	    		booking.moreinfo = $('#info_input').val();
+	    		booking.num_escorts = $('#num_escorts_input').val();
+	    		booking.account = $('#account_input').val();
 
 	    		//now going to do an ajax request to pass the variables in to add it to the database, then reload the table.
 
@@ -130,16 +168,15 @@ $(function() {
 		           		} 	
 		           		else
 		           			alert(result);
+		           		//clear the form!
+		           		$('#bookingForm').find("input[type=text], textarea").val("");
 			       	}
 	    		});
 
 	    	});
 
-    		
-    		
-    		//alert(getLeavetime($('#pickup_input').val()));
-    	}
-    });
+    // do whatever you want here
+});
 
 
 
@@ -172,10 +209,12 @@ $(function() {
 		    		});
         			var text = $(this[0]).text();
         			//this removes the accordian element
-        			$(this).fadeOut('slow',function(){$(this).remove();});
-        			var thtml = $(this);
-        			thtml[0].removeChild(thtml[0].childNodes[2]);
         			
+        			var thtml = $(this);
+        			console.log(thtml[0].children);
+        			thtml[0].removeChild(thtml[0].children[2]);
+        			console.log(thtml[0].children);
+        			$(this).fadeOut('slow',function(){$(this).remove();});
         			//now to add the driver back into the top divs...
         			var newDiv = '<div id="'+$(this).attr('id')+'" class="drivers_avail drivers">'+thtml[0].innerHTML+'</div>';
 
@@ -427,6 +466,58 @@ $.contextMenu({
            
         }
     });
+//for completed jobs
+$.contextMenu({
+        selector: '.results tr', 
+        callback: function(key, options) {
+        	switch(key)
+        	{
+        		case "info":
+        			//lets get the id of the job so that we can get the data.
+        			var jobid = $(this).find('.jobid').text();
+        			var thisRow = $(this);
+        			//now we need to go ask the system for the information
+        			getJobInfo(jobid,function(result){
+        				var t = jQuery.parseJSON(result);
+        				
+        				$(thisRow).find('.midtable').qtip({
+	        						content:
+	        						{
+	        							text: t[1],
+		        						title:
+		        						{
+											text: t[0],
+											button: true,
+										},
+									},
+									position:
+									{
+										my: 'top center',
+										at: 'bottom center',
+									},
+			        				show:
+			        				{
+			        					event:false,
+			        					ready:true,
+			        				},
+			        				hide: 
+			        					false,
+			        				style: 
+			        				{
+										classes: 'qtip-light qtip-shadow'
+									},			
+			        			});
+
+
+        			});
+        			break;
+        	}
+        },
+        items: {
+            "info": {name: "Job Information", icon: ""},
+           
+        }
+    });
 
 
 
@@ -462,7 +553,8 @@ function getJobInfo(jobid,callback)
 					{
 						case "tamas.booking":
 							title = "Local";
-	        				text = "<strong>Leave Time:</strong> "+d[0].fields['leave_time']+", <strong>Pickup Time:</strong> "+d[0].fields['pickup_time']+"<br/>"+
+	        				text = "<strong>Date: </strong>"+d[0].fields['date']+"<br/>"+
+	        						"<strong>Leave Time:</strong> "+d[0].fields['leave_time']+", <strong>Pickup Time:</strong> "+d[0].fields['pickup_time']+"<br/>"+
 	        						"<strong>Pickup Loc:</strong> "+d[0].fields['pickup_address']+" <br/>"+
 	        						"<strong>Destination:</strong> "+d[0].fields['destin_address']+"<br/>"+
 	        						"<strong>No. Passengers:</strong> "+d[0].fields['no_passengers']+"<br/>"+
@@ -473,7 +565,8 @@ function getJobInfo(jobid,callback)
 	        				break;
 	        			case "tamas.account":
 	        				title = d[i].fields['alias'];
-							text = "<strong>Leave Time:</strong> "+d[0].fields['leave_time']+", <strong>Pickup Time:</strong> "+d[0].fields['pickup_time']+"<br/>"+
+							text = "<strong>Date: </strong>"+d[0].fields['date']+"<br/>"+
+									"<strong>Leave Time:</strong> "+d[0].fields['leave_time']+", <strong>Pickup Time:</strong> "+d[0].fields['pickup_time']+"<br/>"+
 	        						"<strong>Pickup Loc:</strong> "+d[0].fields['pickup_address']+" <br/>"+
 	        						"<strong>Destination:</strong> "+d[0].fields['destin_address']+"<br/>"+
 	        						"<strong>No. Passengers:</strong> "+d[0].fields['no_passengers']+"<br/>"+
@@ -589,38 +682,125 @@ function dropRows()
 			var driverId = $(this).find('.driverid').text();
 			//As long as the id is always the first column on the table this this works
 			var jobId = ui.draggable[0].cells[0].textContent;
+			var done = false;
+			$('.drivers_uavail_inner').each(function(){
+				var temp_jobid = $(this).find('.jobid').text();
+				if(temp_jobid == jobId)
+					done = true;
+			});
+			if(done)
+			{
+				console.log('done');
+				return;
+			}
+				
 
-			//now we have the driver and the job id we need to send it to the django back end to make it works its magic
 
-			//this will done via yet another AJAX call
+			var num_escorts = ui.draggable[0].cells[7].textContent;
 			var details = new Object();
-			details.driverid = driverId;
-			details.jobid = jobId;
-			$.ajax({
-	        	url: '/addDriverToBooking/',
-	        	type: 'POST',
-	        	contentType: 'application/json; charset=utf-8',
-	        	data: JSON.stringify(details),
-	        	dataType: 'text',
-	        	success: function(result) {
-	            	//as the job has now been dispatched we need to do something to let the user know.
-	            	ui.draggable[0].cells[6].innerHTML = "<img src='/static/Tick-32.png' />";
+			var thisObj = $(this);
+			if(parseInt(num_escorts) > 0)
+			{
+				var height = 0;
+				//so we have some escorts, so we need to prompt for them.
+				switch(parseInt(num_escorts))
+				{
+					case 1:
+						$('#es1').removeClass('hidden');
+						height = 220;
+						break;
+					case 2:
+						$('#es1').removeClass('hidden');
+						$('#es2').removeClass('hidden');
+						height = 270;
+						break;
+					case 3:
+						$('#es1').removeClass('hidden');
+						$('#es2').removeClass('hidden');
+						$('#es3').removeClass('hidden');
+						height = 320;
+						break;
+					case 4:
+						$('#es1').removeClass('hidden');
+						$('#es2').removeClass('hidden');
+						$('#es3').removeClass('hidden');
+						$('#es4').removeClass('hidden');
+						height = 400;
+						break;
+				}
+				$("#dialog-escort").dialog({
+					resizable: false,
+					height: height,
+					modal: true,
+					buttons: {
+						"Ok": function() {
+							$( this ).dialog( "close" );
+							
+							details.escort1 = $('#esc1').val();
+							details.escort2 = $('#esc2').val();
+							details.escort3 = $('#esc3').val();
+							details.escort4 = $('#esc4').val();
+							details.driverid = driverId;
+							details.jobid = jobId;
+							$.ajax({
+					        	url: '/addDriverToBooking/',
+					        	type: 'POST',
+					        	contentType: 'application/json; charset=utf-8',
+					        	data: JSON.stringify(details),
+					        	dataType: 'text',
+					        	success: function(result) {
+					            	//as the job has now been dispatched we need to do something to let the user know.
+					            	ui.draggable[0].cells[6].innerHTML = "<img src='/static/Tick-32.png' />";
+					           	}
+				    		});
+				    		var thtml = thisObj;
+							//lets add the dropped driver to the lower list
+					 		var testDiv = '<div id="'+thisObj.attr('id')+'" class="drivers drivers_uavail_inner">'+thisObj.html()+'<span class="hidden jobid">'+jobId+'</span></div>';
+					 		$('.drivers_unavil').append(testDiv);
+							//remove the one it was dropped on
+							thisObj.remove();
+							addClick();
+							$('.es').each(function(){
+								$(this).addClass('hidden');
+							});
+						},
+						Cancel: function() 
+						{
+							$( this ).dialog( "close" );
+							$('.es').each(function(){
+								$(this).addClass('hidden');
+							});
+						}
+					}
+					});
+				
+			}
+			else
+			{
+				details.driverid = driverId;
+				details.jobid = jobId;
+				$.ajax({
+		        	url: '/addDriverToBooking/',
+		        	type: 'POST',
+		        	contentType: 'application/json; charset=utf-8',
+		        	data: JSON.stringify(details),
+		        	dataType: 'text',
+		        	success: function(result) {
+		            	//as the job has now been dispatched we need to do something to let the user know.
+		            	ui.draggable[0].cells[6].innerHTML = "<img src='/static/Tick-32.png' />";
+		           	}
+	    		});
+	    		var thtml = $(this);
+				//lets add the dropped driver to the lower list
+		 		var testDiv = '<div id="'+$(this).attr('id')+'" class="drivers drivers_uavail_inner">'+$(this).html()+'<span class="hidden jobid">'+jobId+'</span></div>';
+		 		$('.drivers_unavil').append(testDiv);
+				//remove the one it was dropped on
+				$(this).remove();
+				addClick();
+			}
+			
 
-
-	           	}
-    		});
-			//lets add the dropped driver to the lower list
-	 		var testDiv = '<div id="'+$(this).attr('id')+'" class="drivers drivers_uavail_inner"> '+$(this).html()+'<span class="hidden jobid">'+jobId+'</span></div>';
-	 		
-	 		$('.drivers_unavil').append(testDiv);
-		
-
-
-
-			//remove the one it was dropped on
-			$(this).remove();
-			addClick();
-
+			
 	 	},
 	 });
 }
