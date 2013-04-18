@@ -15,21 +15,33 @@
 		  <ul>
 		    <li><a href="#tabs-1">Current Jobs</a></li>
 		    <li><a href="#tabs-2">Past Jobs</a></li>
-		    <li><a href="#tabs-3">Extra Currently</a></li>
+		    <li><a href="#tabs-3">Search Jobs</a></li>
 		  </ul>
 		  <div id="tabs-1">
-		  	{%block table%}
-		  	{%include "table.html"%}
-		  	{%endblock%}
+		  	<div id='jobsTable'>
+		  		<div id='jobsTable-inner'>
+				  	{%block table%}
+				  	{%include "table.html"%}
+				  	{%endblock%}
+				</div>
+			</div>
 		    
 		  </div>
 		  <div id="tabs-2">
-		    {%block completeTable%}
-		    {%include "completedTable.html"%}
-		    {%endblock%}
+		  	<div id='completedTable'>
+		  		<div id='completeTable-inner'>
+				    {%block completeTable%}
+				    {%include "completedTable.html"%}
+				    {%endblock%}
+			    </div>
+			</div>
 		  </div>
 		  <div id="tabs-3">
-		    <p>not to sure yet what to put here</p>
+		    {%block searchJobs%}
+		    {%include "searchJob.html"%}
+
+		    {%endblock%}
+		    
 		  </div>
 		</div>
 
@@ -39,7 +51,6 @@
 		<div id="tabs2">
 		  <ul>
 		    <li><a href="#DriversAvail">Drivers</a></li>
-		    <li><a href="#tabs-2">Escorts</a></li>
 		    <li><a href="#tabs-3">On Call</a></li>
 		  </ul>
 		  <div id="DriversAvail">
@@ -48,9 +59,6 @@
 		    <div id="driver{{d.id}}" class="drivers_avail drivers"><p> {{d.driver.callsign}} <br/>{{d.driver.name}}</p><span class='hidden driverid'>{{d.driver.id}}</span></div>
 		   
 		    {%endfor%}
-		  </div>
-		  <div id="tabs-2">
-		    <p>list of escorts here.</p>
 		  </div>
 		  <div id="tabs-3">
 		    <p>On call drivers here</p>
