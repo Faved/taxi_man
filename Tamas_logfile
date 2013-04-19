@@ -678,3 +678,8 @@
 [19/Apr/2013 04:00:25] DEBUG [tamas.views:203] faved - Requested booking info for job: 49
 [19/Apr/2013 04:00:33] DEBUG [tamas.views:215] faved - Cancelled Job: 47
 [19/Apr/2013 04:03:27] DEBUG [tamas.views:46] faved - loaded all jobs from home
+[19/Apr/2013 12:51:18] DEBUG [tamas.views:46] faved - loaded all jobs from home
+[19/Apr/2013 12:51:24] DEBUG [tamas.views:46] faved - loaded all jobs from home
+[19/Apr/2013 12:51:52] DEBUG [tamas.views:46] faved - loaded all jobs from home
+[19/Apr/2013 12:52:43] DEBUG [tamas.views:46] faved - loaded all jobs from home
+[19/Apr/2013 12:59:33] DEBUG [tamas.views:46] faved - loaded all jobs from home
