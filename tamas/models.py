@@ -104,6 +104,7 @@ class Booking(models.Model):
 	date 				= models.DateField()
 	account 			= models.ForeignKey(Account, null=True,blank=True)
 	cancelled			= models.BooleanField()
+	cancelled_reason	= models.CharField(max_length=200,null=True,blank=True)
 	def __unicode__(self):
 		return self.date.strftime("%d/%m/%y")+" | "+self.pickup_time.strftime("%H:%M:%S %Z")+" | Pickup: "+self.pickup_address+" | Destination: "+self.destin_address
 
@@ -127,3 +128,11 @@ class Driver_status(models.Model):
 		)
 	driver 				= models.ForeignKey(Driver)
 	status 				= models.CharField(max_length=30,choices=STATUS_CHOICES)
+
+# testing for locations
+class Addresses(models.Model):
+	placeName = models.CharField(max_length=200)
+	townName = models.CharField(max_length=200)
+	postCode = models.CharField(max_length=30)
+	def __unicode__(self):
+		return self.placeName+" | "+self.townName+" | "+self.postCode

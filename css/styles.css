@@ -1,3 +1,4 @@
+
 body{
   font-family: Verdana,Arial,sans-serif;
   font-size: 0.6em;
@@ -13,11 +14,61 @@ body{
   width:1000px;
   border:thin solid black;
   border-radius: 15px;
+  padding:3px;
 }
 .content{
   height:500px;
 }
 
+.flex {
+  -moz-box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+  -webkit-box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+  box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+  background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #79bbff), color-stop(1, #378de5) );
+  background:-moz-linear-gradient( center top, #79bbff 5%, #378de5 100% );
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#79bbff', endColorstr='#378de5');
+  background-color:#79bbff;
+  -moz-border-radius:6px;
+  -webkit-border-radius:6px;
+  border-radius:6px;
+  border:1px solid #84bbf3;
+  display:inline-block;
+  color:#ffffff;
+  font-family:arial;
+  font-size:15px;
+  font-weight:bold;
+  padding:6px 24px;
+  text-decoration:none;
+  text-shadow:1px 1px 0px #528ecc;
+  cusor:pointer;
+  margin-top:60px;
+  margin-left:30px;
+  -webkit-user-select: none; /* Chrome/Safari */        
+-moz-user-select: none; /* Firefox */
+-ms-user-select: none; /* IE10+ */
+
+/* Rules below not implemented in browsers yet */
+-o-user-select: none;
+user-select: none;
+}
+.flex:hover {
+  background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #378de5), color-stop(1, #79bbff) );
+  background:-moz-linear-gradient( center top, #378de5 5%, #79bbff 100% );
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#378de5', endColorstr='#79bbff');
+  background-color:#378de5;
+  cusor:pointer;
+  -webkit-user-select: none; /* Chrome/Safari */        
+-moz-user-select: none; /* Firefox */
+-ms-user-select: none; /* IE10+ */
+
+/* Rules below not implemented in browsers yet */
+-o-user-select: none;
+user-select: none;
+}
+.flex:active {
+  position:relative;
+  top:1px;
+}
 
 .logo{
   width:300px;
@@ -51,8 +102,10 @@ body{
   height:50%;
 }
 .drivers_unavil{
-  height:49%;
-  border:thin solid grey;
+  height:47.5%;
+  border: thin solid grey;
+  border-radius:5px;
+  overflow-y:scroll;
 }
 .driversU_head{
  height:7%;
@@ -62,11 +115,7 @@ body{
   font-size:1.2em;
 }
 
-.head-box{
-  width:150px;
-  float:right;
 
-}
 
 .ui-tabs{
   height:98%;
@@ -96,7 +145,7 @@ body{
 }
 
 
-.drivers_avail{
+.drivers_avail,.drivers_onCall{
    background:#c7c7c7;
 }
 .drivers_uavail_inner{
@@ -322,6 +371,7 @@ input, .input {
 #custMap{
   height:400px;
   width:250px;
+  
 }
 
 
@@ -371,6 +421,184 @@ input, .input {
  clear:both;
 margin-left:30%;
 }
+#jobSearch{
+ margin-bottom:10px;
+  margin-top:4px;
+}
+#info{
+  width:240px;
+  border:thin solid black;
+  border-radius: 5px;
+  padding: 5px;
+  height:350px;
+  margin-top:10px;
+}
+#info h1{
+ text-align:center; 
+}
+#info div{
+ width:200px;
+  height:50px;
+
+  margin-top:40px;
+  margin-left:20px;
+  font-size:20px;
+}
+ .createhead{
+ width:575px;
+
+  height:30px;
+  margin-top:-30px;
+  margin-bottom:10px;
+  text-align:center;
+  
+}
+.accountCreate{
+  display: none;
+}
+.showExample{
+ display:inline-block;
+  margin-left:0px;
+}
+#minibusExample{
+width:15px;
+height:15px;
+background-color:#F75C9A;
+margin-right:10px;
+}
+#mobilityExample{
+  background-color: #E0F75C;
+  width:15px;
+  height:15px;
+  margin-right:10px;
+}
+.examples{
+ width:80px; 
+  
+}
+.head-box{
+  width:250px;
+  float:right;
+margin-top:57px;
+}
+.clock {
+    width: 200px;
+    margin: 0 auto;
+    padding: 0px;
+
+    color: black;
+}
+#Date {
+    font-family:  Helvetica, sans-serif;
+    font-size: 16px;
+    text-align: center;
+    
+}
+
+.datedisplay {
+    width: 200px;
+    margin: 0 auto;
+    padding: 0px;
+    list-style: none;
+    text-align: center;
+}
+
+.datedisplay li {
+    display: inline;
+    font-size: 1.5em;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    
+}
+#point {
+    position: relative;
+    -moz-animation: mymove 1s ease infinite;
+    -webkit-animation: mymove 1s ease infinite;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+
+#user{
+ position:relative;
+  width: 200px;
+  height: 30px;
+  left:750px;
+  top:-90px;
+  font-size:1.5em;
+}
+
+
+
+/* Add some nice box-shadow-ness to the dialogues */
+.qtip-dialogue{
+  max-width: 420px;
+  min-width: 210px;
+ 
+  -moz-box-shadow: 0 0 10px 1px rgba(0,0,0,.5);
+  -webkit-box-shadow: 0 0 10px 1px rgba(0,0,0,.5);
+  box-shadow: 0 0 10px 1px rgba(0,0,0,.5);
+}
+ 
+.qtip-dialogue .qtip-content{
+  padding: 10px;
+}
+ 
+.qtip-dialogue button{
+  float: left;
+  width: 47%;
+  margin-right: 10px;
+  padding: 3px 0;
+ 
+  text-align: center;
+  font-size: 10.5px;
+}
+ 
+.qtip-dialogue button + button{
+  float: right;
+  margin-right: 0;
+}
+ 
+.qtip-dialogue input{
+  width: 95%;
+  padding: 3px 0 3px 5px;
+  margin-bottom: 7px;
+ 
+  font-size: 10.5px;
+}
+ 
+.qtip-dialogue button.full{
+  float: none;
+  width: 100%;
+}
+.login_page{
+
+  width:400px;
+  clear:both;
+  margin:0 auto;
+  display:block;
+  text-align:center;
+}
+
+.login_submit{
+ width:300px;
+  margin-left:14px;
+}
+.welcome{
+
+  width:400px;
+  clear:both;
+  margin: 0 auto;
+  text-align:center;
+  font-size:11px;
+  
+}
+
+
+
+
+
+
 
 
 

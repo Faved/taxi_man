@@ -1,7 +1,67 @@
 // this is the functions 
+// need a couple of golbal vars
+var listOfPlaces = new Array();
+var directionsDisplay;
+var map;
+
 
 $(function() {
+	//one of the first things to do is to create a list of objects form the database
+	$.ajax({
+        	url: '/places',
+        	type: 'GET',
+        	contentType: 'application/json; charset=utf-8',
+        	dataType: 'text',
+        	success: function(result) {
+            	if(result != "none")
+            	{
+            		var temp = jQuery.parseJSON(result);
+            		for(var i=0; i<temp.length;i++)
+            		{
+            			var tempObj = new Object();
+            			tempObj.place = temp[i].fields['placeName'];
+            			tempObj.town = temp[i].fields['townName'];
+            			tempObj.postcode = temp[i].fields['postCode'];
+
+            			listOfPlaces.push(tempObj);
+
+            		}
+            	}
+           	}
+		});
+
+//Stuff for the clock:
+// Create two variable with the names of the months and days in an array
+var monthNames = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ]; 
+var dayNames= ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
+
+// Create a newDate() object
+var newDate = new Date();
+// Extract the current date from Date object
+newDate.setDate(newDate.getDate());
+// Output the day, date, month and year   
+$('#Date').html(dayNames[newDate.getDay()] + " " + newDate.getDate() + ' ' + monthNames[newDate.getMonth()] + ' ' + newDate.getFullYear());
+
+setInterval( function() {
+	// Create a newDate() object and extract the seconds of the current time on the visitor's
+	var seconds = new Date().getSeconds();
+	// Add a leading zero to seconds value
+	$("#sec").html(( seconds < 10 ? "0" : "" ) + seconds);
+	},1000);
 	
+setInterval( function() {
+	// Create a newDate() object and extract the minutes of the current time on the visitor's
+	var minutes = new Date().getMinutes();
+	// Add a leading zero to the minutes value
+	$("#min").html(( minutes < 10 ? "0" : "" ) + minutes);
+    },1000);
+	
+setInterval( function() {
+	// Create a newDate() object and extract the hours of the current time on the visitor's
+	var hours = new Date().getHours();
+	// Add a leading zero to the hours value
+	$("#hours").html(( hours < 10 ? "0" : "" ) + hours);
+    }, 1000);	
 
     $( "#tabs" ).tabs();
     $( "#tabs2" ).tabs();
@@ -42,25 +102,115 @@ $(function() {
 	var d = new Date();
 	$('#date_input').val(d.toJSON().slice(0,10));
 	
+	$('#is_Account').click(function(){
+		$('.accountCreate').toggle();
+	});
+/*****************************************************************************************************
 
-    //this is a test to see a clock in the corner.
+To search for new books that have come in via the API
+******************************************************************************************************/
+   
 	var inters = setInterval(
 	 function()
 	 {
-	 	$.ajax({
-	        	url: '/test',
-	        	type: 'GET',
-	        	contentType: 'application/json; charset=utf-8',
-	        	dataType: 'text',
-	        	success: function(result) {
-	            	if(result != "none")
-	            	{
-	            		alert("new booking added!");
-	            	}
-	           	}
-    		});
+	 	if($('#dialog-newBooking').css('display') == 'none')
+	 	{
+		 	$.ajax({
+		        	url: '/checkForBooking',
+		        	type: 'GET',
+		        	contentType: 'application/json; charset=utf-8',
+		        	dataType: 'text',
+		        	success: function(result) {
+		            	if(result != "none")
+		            	{
+		            		var temp = jQuery.parseJSON(result);
+		            		console.log(temp);
+		            		//first we need to create the html to put in the dialog.
+		            		var html = 	"<div class='newBookingInformation'>"+
+		            					"<strong>Date: </strong>"+temp[0].fields['date']+"<br/>"+
+		            					"<strong>Pickup Time:</strong> "+temp[0].fields['pickup_time']+"<br/>"+
+		            					"<strong>Pickup: </strong>"+temp[0].fields['pickup_address']+"<br/>"+
+		            					"<strong>Destination:</strong> "+temp[0].fields['destin_address']+"<br/>"+
+		            					"<strong>No. Passengers:</strong> "+temp[0].fields['no_passengers']+"<br/>"+
+		            					"<strong>Vehicle: </strong>"+temp[0].fields['vehicle_type']+"<br/>"+
+		            					"<strong>More Info:</strong> "+temp[0].fields['extra_info']+
+		            					"</div>";
+		            		$('.newbookingDetails').append(html);
 
-	 }, 30000);
+		            		$("#dialog-newBooking").dialog({
+								resizable: false,
+								height:350,
+								modal: false,
+								buttons: {
+									"Accept Booking": function() {
+										$( this ).dialog( "close" );
+										$(this).css('display','none');
+										$('.newbookingDetails').html("");
+										// if accepted send a message to the server to set it as accepted by the logged in user
+										var tempObj = new Object();
+										tempObj.jobid = temp[0].pk;
+										$.ajax({
+								        	url: '/comfirmBooking/',
+								        	type: 'POST',
+								        	contentType: 'application/json; charset=utf-8',
+								        	data: JSON.stringify(tempObj),
+								        	dataType: 'text',
+								        	success: function(result) 
+								        	{
+							        		    $('#tabs-1').load('/table',function(){
+								           			dragRows();
+									           		dropRows();
+									           	});    		
+									       	}
+										});
+
+									
+									},
+									"Decline Booking": function() 
+									{
+										$( this ).dialog( "close" );
+										$(this).css('display','none');
+										$('.newbookingDetails').html("");
+										var reason;
+										apprise('Please enter a reason for declining', {'verify':true,'input' : true,}, function(r) {
+											if(r) { 
+												reason = r;
+											} 
+										});
+										
+										var tempObj = new Object();
+										tempObj.jobid = temp[0].pk;
+										tempObj.reason = reason;
+										$.ajax({
+								        	url: '/declineBooking/',
+								        	type: 'POST',
+								        	contentType: 'application/json; charset=utf-8',
+								        	data: JSON.stringify(tempObj),
+								        	dataType: 'text',
+								        	success: function(result) 
+								        	{
+							        		    $('#tabs-1').load('/table',function(){
+								           			dragRows();
+									           		dropRows();
+									           	});    		
+									       	}
+										});
+									}
+								},
+								 close: function( event, ui ) {
+								 		$( this ).dialog( "close" );
+										$(this).css('display','none');
+										$('.newbookingDetails').html("");
+								},
+								});
+
+
+		            	}
+		           	}
+	    		});
+		}
+	 	//need to make the time something reasonable, probs 60 seconds.
+	 }, 10000);
 
 
 	// this will refresh the table, if there is a new entry.
@@ -223,7 +373,7 @@ $('#bookingForm').submit(function(event){
   					$('#tabs-1').load('/table',function(){
 		           				dragRows();
 		           				dropRows();
-		           			});
+		           	});
   					$('#tabs-2').load('/cleartable',function(){
 
   					});
@@ -518,11 +668,86 @@ $.contextMenu({
            
         }
     });
+	//for completed jobs
+	$.contextMenu({
+	        selector: '.drivers_onCall', 
+	        callback: function(key, options) {
+	        	switch(key)
+	        	{
+	        		case "add":
+	        			var starttime;
+	        			var endtime;
+	        			var driverid = $(this).find('.driverid').text();
+	        			apprise('Enter Start Time (HH:mm) format', {'verify':true,'input' : true,}, function(r) {
+
+							if(r) { 
+								if(!r.match(/\d|\d\:\d|\d/))
+								{
+									apprise('You didnt enter a time in correct format, canceling', {'confirm' : true,}, function(r) {});
+									return;
+								}
+								
+								starttime = r;
+								apprise('Enter End Time (HH:mm) format', {'verify':true,'input' : true,}, function(r) {
+
+									if(r) { 
+										endtime =r;
+										if(!r.match(/\d|\d\:\d|\d/))
+										{
+											apprise('You didnt enter a time in correct format, canceling', {'confirm' : true,}, function(r) {});
+											return;
+										}
+
+										//we now have the stat and end time for this driver for todays shift.
+										//lets do some more AJAX and find out if this rota eixists and then assign a driver to it then reload the drivers
+										var tempObj = new Object();
+										tempObj.starttime = starttime;
+										tempObj.endtime = endtime;
+										tempObj.driverid = driverid;
+										$.ajax({
+								        	url: '/makeDriverAvail/',
+								        	type: 'POST',
+								        	contentType: 'application/json; charset=utf-8',
+								        	data: JSON.stringify(tempObj),
+								        	dataType: 'text',
+								        	success: function(result) {
+								            	$('#DriversAvail').load('/getAvailableDrivers/',function(){
+								            		dropRows()
+								            	});
+								           	}
+							    		});
 
 
 
+									} else { 
+									
+										apprise('You didnt enter a time, canceling', {'confirm' : true,}, function(r) {});
+									}
+								});
+							} else { 
+						
+								apprise('You didnt enter a time, canceling', {'confirm' : true,}, function(r) {});
+							}
+						});
+	        			break;
+	        	}
+	        },
+	        items: {
+	            "add": {name: "Make Available", icon: ""},
+	           
+	        }
+	    });
 
-
+	//was used for testing to try and over ride the google autocomplete
+	// $('#destin_input').change(function(event)
+	// {
+	// 	event.preventDefault();
+	// 	makeDirections();
+	// });
+	// $('#pickup_input').change(function(event){
+	// 	event.preventDefault();
+	// 	makeDirections();
+	// })
 
 
 
@@ -597,61 +822,7 @@ function getJobInfo(jobid,callback)
 }
 
 
-/*
- * Common dialogue() function that creates our dialogue qTip.
- * We'll use this method to create both our prompt and confirm dialogues
- * as they share very similar styles, but with varying content and titles.
- */
-function dialogue(content, title) {
-	/* 
-	 * Since the dialogue isn't really a tooltip as such, we'll use a dummy
-	 * out-of-DOM element as our target instead of an actual element like document.body
-	 */
-	$('<div />').qtip(
-	{
-		content: {
-			text: content,
-			title: title
-		},
-		position: {
-			my: 'center', at: 'center', // Center it...
-			target: $(window) // ... in the window
-		},
-		show: {
-			ready: true, // Show it straight away
-			modal: {
-				on: true, // Make it modal (darken the rest of the page)...
-				blur: false // ... but don't close the tooltip when clicked
-			}
-		},
-		hide: false, // We'll hide it maunally so disable hide events
-		style: 'qtip-light qtip-rounded qtip-dialogue', // Add a few styles
-		events: {
-			// Hide the tooltip when any buttons in the dialogue are clicked
-			render: function(event, api) {
-				$('button', api.elements.content).click(api.hide);
-			},
-			// Destroy the tooltip once it's hidden as we no longer need it!
-			hide: function(event, api) { api.destroy(); }
-		}
-	});
-}
-function Confirm(question, callback)
-{
-	// Content will consist of the question and ok/cancel buttons
-	var message = $('<p />', { text: question }),
-		ok = $('<button />', { 
-			text: 'Ok',
-			click: function() { callback(true); }
-		}),
-		cancel = $('<button />', { 
-			text: 'Cancel',
-			click: function() { callback(false); }
-		});
 
-	dialogue( message.add(ok).add(cancel), 'Attention' );
-}
- 
 
 //need a function to add clicks to the new created elements
 function addClick()
@@ -809,20 +980,22 @@ function dragRows()
 {
 	 $(".tableOfJobs tr").draggable({
               helper:function(event) {
-              		var t = $(event.target).closest('tr').html();
+              		var t = $(event.target).closest('tr');
               		var l = [];
-              		l = t.split('</td>');
-              		
+              		l.push(t[0].children[5].innerHTML);
+              		l.push(t[0].children[1].innerHTML);
+              		l.push(t[0].children[3].innerHTML);
+              		l.push(t[0].children[4].innerHTML);
               		for(var i = 0; i < l.length;i++)
               		{
-              			l[i] = l[i].substring((l[i].indexOf('<td>'))+4,l[i].length);
+              			l[i] = l[i].trim();
+              			l[i] = l[i].substring((l[i].indexOf('>'))+1,l[i].lastIndexOf('<'));
               			
               			
               		}
-
 					var tableDrag = '<div class="tableDrag">';
 					tableDrag += '<div class="drag-head">'+l[0]+'</div>';
-					tableDrag += 'Time: '+l[1]+'<br/>';
+					tableDrag += 'Leave Time: '+l[1]+'<br/>';
 					tableDrag += 'Pickup: '+l[2]+'<br/>';
 					tableDrag += 'Destination: '+l[3]+'<br/>';
 					tableDrag += '</div>';
@@ -860,6 +1033,8 @@ function setDriverHeight()
 		$(this).css('color','red');
 	});
 }
+var autocomplete ;
+var autocomplete2;
 
 // This is the code for the drop down from the google maps api
 // do map stuff function
@@ -870,14 +1045,14 @@ function loadmap()
           zoom: 13,
           mapTypeId: google.maps.MapTypeId.ROADMAP
         };
+
 	map = new google.maps.Map(document.getElementById('custMap'),
           mapOptions);
 	//pickup.
 	var input = document.getElementById('pickup_input');
 	//destin
 	var input2 = document.getElementById('destin_input');
-	var autocomplete ;
-	var autocomplete2;
+	
 
 	var defaultBounds = new google.maps.LatLngBounds(
 	new google.maps.LatLng(50.445481,-4.739628),
@@ -891,19 +1066,135 @@ function loadmap()
         };
 	autocomplete = new google.maps.places.Autocomplete(input,options);
 	autocomplete2 = new google.maps.places.Autocomplete(input2,options);
+
+
+
+
+	var desLocation;
+	var pickLocation;
+	
 	google.maps.event.addListener(autocomplete2 , 'place_changed', function() {
-  		var objLocation = autocomplete2.getPlace();
-  		
+  		desLocation = autocomplete2.getPlace();
+  		changeDestination();
+  		makeDirections();  	
   			
-  		//makeDirections($('#custPickup'),$('#custDest'));
 	});
+
+
 		google.maps.event.addListener(autocomplete , 'place_changed', function() {
-  		var objLocation = autocomplete.getPlace();
+  		pickLocation = autocomplete.getPlace();
 
-  			
-  		//makeDirections($('#custPickup'),$('#custDest'));
+  			makeDirections();
+   		
 	});
 
+}
+function isValidPostcode(p) {
+	var postcodeRegEx = /[A-Z]{1,2}[A-Z0-9]{1,2} ?[0-9][A-Z]{2}/i;
+	return postcodeRegEx.test(p);
+}
+function changeDestination()
+{
+	var destLoc = $('#destin_input').val();
+	var destinChange = false;
+	var destin_place;
+	for( var i= 0; i< listOfPlaces.length;i++)
+	{
+		if(destLoc.toLowerCase() == listOfPlaces[i].place.toLowerCase())
+		{
+			destin_place = listOfPlaces[i];
+			destinChange = true;
+			break;
+		}
+	}
+	if(destinChange == null)
+	{
+		var temp = destLoc.split(',');
+		
+		//need to make sure it is by testing length
+		if(temp.length > 1 )
+		{
+			destinChange=true;
+			var tempObj = new Object();
+			tempObj.place = temp[0]
+			tempObj.town = temp[1];
+			tempObj.postcode = '';
+			pickup_place = tempObj;
+		}
+		
+	}
+	if(destinChange)
+	{
+		var tempAdd = destin_place.place+', '+destin_place.town;
+		if(destin_place.postcode != '')
+			tempAdd +=', '+pickup_place.postcode;
+
+		$('#destin_input').val(tempAdd);
+	}
+	makeDirections();
+}
+function changePickup()
+{
+	//get the values from the 2 text boxes
+	var pickLoc = $('#pickup_input').val();
+	
+
+	var pickup_place;
+	
+
+	var pickChange = false;
+	
+
+	for( var i= 0; i< listOfPlaces.length;i++)
+	{
+		if(pickLoc.toLowerCase() == listOfPlaces[i].place.toLowerCase())
+		{
+			pickup_place = listOfPlaces[i];
+			pickChange = true;
+			break;
+		}
+	}
+	
+
+	//let see if it was, if it wasnt then it is likely that it was frm the auto complete (or not in there yet)
+	if(pickup_place == null)
+	{
+		var temp = pickLoc.split(',');
+		
+		//need to make sure it is by testing length
+		if(temp.length > 1 )
+		{
+			pickChange=true;
+			var tempObj = new Object();
+			tempObj.place = temp[0]
+			tempObj.town = temp[1];
+			tempObj.postcode = '';
+			pickup_place = tempObj;
+		}
+		
+	}
+	
+
+	if(pickChange)
+	{
+		var tempAdd = pickup_place.place+', '+pickup_place.town;
+		if(pickup_place.postcode != '')
+			tempAdd +=', '+pickup_place.postcode;
+
+		$('#pickup_input').val(tempAdd);
+	}
+	makeDirections();
+}
+function test(place,autocomplete)
+{
+	google.maps.event.clearListeners(autocomplete2, 'place_changed');
+	var add = place.place +", "+place.town;
+	if(place.postcode != '')
+		add += ', '+place.postcode;
+	$('#destin_input').val("fucking work");
+	
+	loadmap();
+	
 }
 function getLeavetime(pickup,callback)
 {
@@ -930,32 +1221,19 @@ function getLeavetime(pickup,callback)
 
 	
 }
-function makeDirections(pickup,destination)
+function makeDirections()
 {
-	//get the values from the 2 text boxes
-	var pickLoc = pickup.val();
-	var destLoc = destination.val();
+	var pickLoc = $('#pickup_input').val();
+	var destLoc = $('#destin_input').val();
 
-	var arr = ['cat and fiddle','callywith','cornish garage'];
-
-	for (var i =0; i < arr.length; i++)
-	{
-		if(pickLoc.indexOf(arr[i]) >= 0 && pickLoc.indexOf('Bodmin') < 0)
-		{
-			pickLoc += ', Bodmin';
-			$('#pickup_input').val($('#pickup_input').val()+',Bodmin');
-
-		}	
-		else if(destLoc.indexOf(arr[i]) >= 0 && destLoc.indexOf('Bodmin') < 0)
-		{
-			destLoc += ', Bodmin';
-			$('#destin_input').val($('#destin_input').val()+',Bodmin');
-		}
+	if(directionsDisplay != null) {
+    directionsDisplay.setMap(null);
+    directionsDisplay = null;
 	}
-	var directionsDisplay;
 
 	var directionsService = new google.maps.DirectionsService();
 	directionsDisplay = new google.maps.DirectionsRenderer();
+
 	directionsDisplay.setMap(map);
 
 	var request = { 
@@ -968,12 +1246,13 @@ function makeDirections(pickup,destination)
 	directionsService.route(request, function(result, status) {
 	    if (status == google.maps.DirectionsStatus.OK) {
 	      directionsDisplay.setDirections(result);
-	      //testing time and distance
-	      $('#custMile span').text((result.routes[0].legs[0].distance.text).replace('mi',''));
-	      $('#custTime').text(result.routes[0].legs[0].duration.text);
-	      	//costings......
 
-			if (destination.val().indexOf("Bodmin") >= 0 && pickup.val().indexOf("Bodmin") >= 0  )
+	  //     //testing time and distance
+	       $('.distance span').text((result.routes[0].legs[0].distance.text).replace('mi',''));
+	       $('.traveltime span').text(result.routes[0].legs[0].duration.text);
+	  //     	//costings......
+	  		//$('.price span').text('Refer to "Out of Town" sheet');
+			if (destLoc.toLowerCase().indexOf("bodmin") >= 0 && pickLoc.toLowerCase().indexOf("bodmin") >= 0  )
 			{
 				//then we need to do local milage for cost
 				var cost = 0;
@@ -985,11 +1264,12 @@ function makeDirections(pickup,destination)
 					cost = 3.50;
 				else
 					cost = 4.00
-				$('#custCost span').text(cost);
+				$('.price span').text(cost);
 			}
 			else
 			{
 				//we need to look up the place against the cost form..... 
+				$('.price span').text('Refer to "Out of Town" sheet');
 			}
 	    }
   	});

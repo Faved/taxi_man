@@ -13,28 +13,24 @@
 	<div class="left">
 		<div id="tabs">
 		  <ul>
-		    <li><a href="#tabs-1">Current Jobs</a></li>
-		    <li><a href="#tabs-2">Past Jobs</a></li>
-		    <li><a href="#tabs-3">Search Jobs</a></li>
+		    <li><a href="#tabs-1">Todays Current Jobs</a></li>
+		    <li><a href="#tabs-2">Todays Completed Jobs</a></li>
+		    <li><a href="#tabs-3">Search All Jobs</a></li>
 		  </ul>
 		  <div id="tabs-1">
-		  	<div id='jobsTable'>
-		  		<div id='jobsTable-inner'>
+		  	
 				  	{%block table%}
 				  	{%include "table.html"%}
 				  	{%endblock%}
-				</div>
-			</div>
+			
 		    
 		  </div>
 		  <div id="tabs-2">
-		  	<div id='completedTable'>
-		  		<div id='completeTable-inner'>
+		  
 				    {%block completeTable%}
 				    {%include "completedTable.html"%}
 				    {%endblock%}
-			    </div>
-			</div>
+			   
 		  </div>
 		  <div id="tabs-3">
 		    {%block searchJobs%}
@@ -54,14 +50,14 @@
 		    <li><a href="#tabs-3">On Call</a></li>
 		  </ul>
 		  <div id="DriversAvail">
-		    <!-- the current available drivers will show here. currently hard coded, this will come from the database eventually -->
-		    {%for d in driversAvail%}
-		    <div id="driver{{d.id}}" class="drivers_avail drivers"><p> {{d.driver.callsign}} <br/>{{d.driver.name}}</p><span class='hidden driverid'>{{d.driver.id}}</span></div>
-		   
-		    {%endfor%}
+		    {%block drivers%}
+				    {%include "drivers.html"%}
+			{%endblock%}
 		  </div>
 		  <div id="tabs-3">
-		    <p>On call drivers here</p>
+		    {%for d in allDrivers %}
+		    	<div id="driver{{d.id}}" class="drivers_onCall drivers"><p> {{d.callsign}} <br/>{{d.name}}</p><span class='hidden driverid'>{{d.id}}</span></div>
+		    {%endfor%}
 		  </div>
 		</div>
 

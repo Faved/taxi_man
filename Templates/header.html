@@ -5,12 +5,26 @@
 			<div class='logo'>
 				TAMAS
 			</div>
-			<a class='flex' >THis needs to be a button</a>
+			<div class='flex'>
+				Create Booking
+			</div>
 			<div class="head-box">
-			
-			{{time}} 
+
+			<div class="clock">
+			<div id="Date" ></div>
+			  <ul class='datedisplay'>
+			      <li id="hours"></li>
+			      <li id="point">:</li>
+			      <li id="min"></li>
+			      <li id="point">:</li>
+			      <li id="sec"></li>
+			  </ul>
+			</div>
 
 
+			</div>
+			<div id='user'>
+				Hello {{user.username}} <a href='/logout/'>Logout</a>{%if user.is_staff%} | <a href='/admin/'>Admin</a>{%endif%}
 			</div>
 
 </div>

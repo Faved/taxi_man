@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.core import serializers
 from tamas.models import *
 import datetime
+import json
 from datetime import date, time, timedelta
 import logging
 log = logging.getLogger(__name__)
@@ -18,8 +19,8 @@ def home(request):
 	# need to filter the results for that day and order them by the time.
 	startdate = date.today()
 	enddate = startdate + timedelta(days=1)
-	bookings = Booking.objects.filter(complete=0,cancelled=0,date__range=[startdate, enddate]).order_by('leave_time')
-	completeBookings = Booking.objects.filter(complete=1,cancelled=0,date__range=[startdate, enddate]).order_by('leave_time')
+	bookings = Booking.objects.filter(complete=0,cancelled=0,date__range=[startdate, enddate]).order_by('leave_time').exclude(entered_by=None)
+	completeBookings = Booking.objects.filter(complete=1,cancelled=0,date__range=[startdate, enddate]).order_by('leave_time').exclude(entered_by=None)
 	alldrivers = Driver.objects.all()
 	escorts = Escort.objects.all()
 	accounts = Account.objects.all()
@@ -39,7 +40,8 @@ def home(request):
 			driverAvail.append(d)
 	
 	t = get_template('content.html')
-	html = t.render(Context({'time':now,'bookings':bookings,'driversAvail':driverAvail,"driversUnavail":driverBusy,"completebookings":completeBookings,"accounts":accounts,"escorts":escorts,"allDrivers":alldrivers}))
+	user = request.user
+	html = t.render(Context({'time':now,'user':user,'bookings':bookings,'driversAvail':driverAvail,"driversUnavail":driverBusy,"completebookings":completeBookings,"accounts":accounts,"escorts":escorts,"allDrivers":alldrivers}))
 	# log it
 	log.debug(request.user.username+' - loaded all jobs from home')
 	return HttpResponse(html)
@@ -49,17 +51,23 @@ def table(request):
 	# need to filter the results for that day and order them by the time.
 	startdate = date.today()
 	enddate = startdate + timedelta(days=1)
-	bookings = Booking.objects.filter(complete=0,cancelled=0,date__range=[startdate, enddate]).order_by('leave_time')
+	bookings = Booking.objects.filter(complete=0,cancelled=0,date__range=[startdate, enddate]).order_by('leave_time').exclude(entered_by=None)
 	t = get_template('table.html')
 	html = t.render(Context({'time':now,'bookings':bookings}))
 	return HttpResponse(html)
+
+def places(request):
+	places = Addresses.objects.all()
+	returnData = serializers.serialize("json",places)
+	return HttpResponse(returnData,mimetype='application/json')
+
 
 def cleartable(request):
 	now = datetime.datetime.now()
 	# need to filter the results for that day and order them by the time.
 	startdate = date.today()
 	enddate = startdate + timedelta(days=1)
-	bookings = Booking.objects.filter(complete=1,cancelled=0,date__range=[startdate, enddate]).order_by('leave_time')
+	bookings = Booking.objects.filter(complete=1,cancelled=0,date__range=[startdate, enddate]).order_by('leave_time').exclude(entered_by=None)
 	t = get_template('completedTable.html')
 	html = t.render(Context({'time':now,'completebookings':bookings}))
 	return HttpResponse(html)
@@ -103,23 +111,35 @@ def search(request):
 def api(request):
 	if request.method == 'POST':
 		data = simplejson.loads(request.body)
+		print data
 		idCode = ""
-		try:
-			name = data[0]
-			fromPlace = data[1]
-			destin = data[2]
-			time = data[3]
-			info = data[4]
-			b = Booking(pickup_address=fromPlace,no_passengers=1,destin_address=destin,leave_time=time,pickup_time=time,customer_name=name,date=datetime.datetime.now(),extra_info=info)
-			b.save()
-			idCode = b.pk
-		except:
-			HttpResponseServerError("Malformed data!")
-		
-		message = idCode
+		# try:
+		date_array = data['date'].split('-')
+		jobDate = datetime.date(int(date_array[0]),int(date_array[1]),int(date_array[2]))
+		# create a time object for leave time....
+		temptime = data['time'].split(':')
+		pickup_time = datetime.time(int(temptime[0]),int(temptime[1]))
+		leave_time = pickup_time
+		print data['customerName']
+		b = Booking(pickup_address=data['pickup'],num_escorts=0,customer_number=data['customerContact'],extra_info=data['moreInfo'],destin_address=data['destination'],date=jobDate,leave_time=leave_time,pickup_time=pickup_time,no_passengers=int(data['num_passengers']),customer_name=data['customerName'],vehicle_type=data['vehicle'])
+		print b
+		b.save()
+		idCode = b.pk
+		book = Booking.objects.filter(id=idCode).exclude(entered_by=None)
+		while book.count() is 0:
+			book = Booking.objects.filter(id=idCode).exclude(entered_by=None)
+		if book[0].cancelled == 1:
+			returnData =  json.dumps({'message':'Not Accepted','Reason':book[0].cancelled_reason})
+			return HttpResponse(returnData,mimetype='application/json')
+		else:
+			returnData = json.dumps({'message':'Accepted','Job ID':idCode})
+			return HttpResponse(returnData,mimetype='application/json')
+		# except:
+			# return HttpResponse("Malformed Data")
 	else:
-		message = "fail"
+		message = "Method Not Allowed"
 	return HttpResponse(message)
+
 
 # This is the url call to add a booking, it is simalar to the api call.
 @csrf_exempt
@@ -234,6 +254,42 @@ def removeFromJob(request):
 		log.debug(request.user.username+' - Removed driver: '+unicode(driver.id)+' from job number: '+data)
 	return HttpResponse("OK")
 
+# This will make a driver available
+@csrf_exempt
+def makeDriverAvail(request):
+	if request.method == 'POST':
+		data = simplejson.loads(request.body)
+		# first we check to see if there is a rota with this start & end time
+		temptime = data['starttime'].split(':')
+		starttime = datetime.time(int(temptime[0]),int(temptime[1]))
+		temptime = data['endtime'].split(':')
+		endtime = datetime.time(int(temptime[0]),int(temptime[1]))
+		rotas = Driver_rotas.objects.filter(start_time=starttime,end_time=endtime)
+		if rotas.count() < 1:
+			rotas = Driver_rotas(start_time=starttime,end_time=endtime)
+			rotas.save()
+			driver = Driver.objects.filter(id=int(data['driverid']))
+			today = date.today()
+			rota = Rotas(date=today,driver=driver[0],rota=rotas)
+			rota.save()
+		else:
+			driver = Driver.objects.filter(id=int(data['driverid']))
+			today = date.today()
+			rota = Rotas(date=today,driver=driver[0],rota=rotas[0])
+			rota.save()
+
+		# log it
+		log.debug(request.user.username+' - made driver available ')
+	return HttpResponse("OK")
+
+# Return available drivers
+def getAvailableDrivers(request):
+	today = date.today()
+	drivers = Rotas.objects.filter(date=today)
+	t = get_template('drivers.html')
+	html = t.render(Context({'driversAvail':drivers}))
+	return HttpResponse(html)
+
 # This is a test view
 def CreateLogFile(data):
 	fo = open("log.txt", 'a')
@@ -241,6 +297,29 @@ def CreateLogFile(data):
 	fo.write("\n")
 	fo.close()
 	
+# this is to comfirm a booking from the api
+@csrf_exempt
+def comfirmBooking(request):
+	if request.method == 'POST':
+		jobno = simplejson.loads(request.body)
+		b = Booking.objects.get(id=int(jobno['jobid'])) 
+		b.entered_by = request.user
+		b.save()
+		log.debug(request.user.username+' - Accepted remote booking with job id of: '+unicode(jobno['jobid']))
+	return HttpResponse("OK")
+# this is to decline a booking from the api
+@csrf_exempt
+def declineBooking(request):
+	if request.method == 'POST':
+		jobno = simplejson.loads(request.body)
+		reason = jobno['reason']
+		b = Booking.objects.get(id=int(jobno['jobid'])) 
+		b.entered_by = request.user
+		b.cancelled_reason = reason
+		b.cancelled = True
+		b.save()
+		log.debug(request.user.username+' - Declined remote booking with job id of: '+unicode(jobno['jobid']))
+	return HttpResponse("OK")
 
 
 #This is to set a job as "clear" ie complete
@@ -269,8 +348,8 @@ def time(request):
 	html = t.render(Context({'time':time.strftime("%H:%M:%S %Z")}))
 	return HttpResponse(html)
 
-def test(request):
-	bookings = Booking.objects.filter(complete=0,entered_by=None)
+def checkForBooking(request):
+	bookings = Booking.objects.filter(complete=0,entered_by=None,cancelled=0)
 	if len(bookings) < 1:
 		return HttpResponse("none");
 	else:
