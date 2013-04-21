@@ -85,7 +85,7 @@ setInterval( function() {
 			}	
 
 		};
-		if(e.which == 66 && e.ctrlKey)
+		if((e.which == 110 || e.which == 78) && e.ctrlKey)
 		{
 			$('.form').show('clip');
 			loadmap();
@@ -168,19 +168,22 @@ To search for new books that have come in via the API
 									},
 									"Decline Booking": function() 
 									{
-										$( this ).dialog( "close" );
-										$(this).css('display','none');
-										$('.newbookingDetails').html("");
-										var reason;
+										
+										var reason = '';
+										var thisdial = $(this);
+										thisdial.dialog( "close" );
 										apprise('Please enter a reason for declining', {'verify':true,'input' : true,}, function(r) {
 											if(r) { 
 												reason = r;
 											} 
-										});
-										
-										var tempObj = new Object();
+											
+											thisdial.css('display','none');
+											$('.newbookingDetails').html("");
+
+											var tempObj = new Object();
 										tempObj.jobid = temp[0].pk;
 										tempObj.reason = reason;
+										console.log(tempObj);
 										$.ajax({
 								        	url: '/declineBooking/',
 								        	type: 'POST',
@@ -195,12 +198,16 @@ To search for new books that have come in via the API
 									           	});    		
 									       	}
 										});
+										});
+										
+
+
 									}
 								},
 								 close: function( event, ui ) {
-								 		$( this ).dialog( "close" );
-										$(this).css('display','none');
-										$('.newbookingDetails').html("");
+								 	// 	$( this ).dialog( "close" );
+										// $(this).css('display','none');
+										// $('.newbookingDetails').html("");
 								},
 								});
 
@@ -269,63 +276,56 @@ $('#bookingForm').submit(function(event){
     // cancels the form submission
     event.preventDefault();
     // need all the available details from the form.
-    		//TODO: work out the leave time.
-    		var pickup = $('#pickup_input').val();
-	    	
-	    	//due to the async nature of the google maps functions need to do it this way:
-	    	getLeavetime(pickup,function(result)
-	    	{
-	    		//result is the time in seconds google thinks it takes to travel from bodmin to the pickup
-	    		//as it is an async call we need to wait for that o finish before we do anything else
-	    		booking = new Object();
-	    		booking.pickup = pickup;
-	    		booking.date = $('#date_input').val();
-	    		booking.time = $('#time_input').val();
-	    		booking.travelTime = result;
-	    		booking.destination = $('#destin_input').val();
-	    		booking.num_of_pass = $('#pass_no_input').val();
-	    		booking.cus_name = $('#cust_name_input').val();
-	    		booking.cus_contact = $('#cust_contact_input').val();
-	    		booking.vehicle = $('#vehicle_input').val();
-	    		if($('#is_Account').prop('checked'))
-	    			booking.isaccount = 'true';
-	    		else
-	    			booking.isaccount = 'false';
-	    		booking.moreinfo = $('#info_input').val();
-	    		booking.num_escorts = $('#num_escorts_input').val();
-	    		booking.account = $('#account_input').val();
+	//TODO: work out the leave time.
+	var pickup = $('#pickup_input').val();
+	//due to the async nature of the google maps functions need to do it this way:
+	getLeavetime(pickup,function(result)
+	{
+		//result is the time in seconds google thinks it takes to travel from bodmin to the pickup
+		//as it is an async call we need to wait for that o finish before we do anything else
+		booking = new Object();
+		booking.pickup = pickup;
+		booking.date = $('#date_input').val();
+		booking.time = $('#time_input').val();
+		booking.travelTime = result;
+		booking.destination = $('#destin_input').val();
+		booking.num_of_pass = $('#pass_no_input').val();
+		booking.cus_name = $('#cust_name_input').val();
+		booking.cus_contact = $('#cust_contact_input').val();
+		booking.vehicle = $('#vehicle_input').val();
+		if($('#is_Account').prop('checked'))
+			booking.isaccount = 'true';
+		else
+			booking.isaccount = 'false';
+		booking.moreinfo = $('#info_input').val();
+		booking.num_escorts = $('#num_escorts_input').val();
+		booking.account = $('#account_input').val();
 
-	    		//now going to do an ajax request to pass the variables in to add it to the database, then reload the table.
-
-	    		$.ajax({
-		        	url: '/add/',
-		        	type: 'POST',
-		        	contentType: 'application/json; charset=utf-8',
-		        	data: JSON.stringify(booking),
-		        	dataType: 'text',
-		        	success: function(result) 
-		        	{
-		           		if(result == "added")
-		           		{
-		           			$('.form').hide('clip');
-		           			//the booking has been added to the database so we need to reload the table
-		           			$('#tabs-1').load('/table',function(){
-		           				dragRows();
-
-		           			});
-		           			
-		           			
-		           		} 	
-		           		else
-		           			alert(result);
-		           		//clear the form!
-		           		$('#bookingForm').find("input[type=text], textarea").val("");
-			       	}
-	    		});
-
-	    	});
-
-    // do whatever you want here
+		//now going to do an ajax request to pass the variables in to 
+		//add it to the database, then reload the table.
+		$.ajax({
+        	url: '/add/',
+        	type: 'POST',
+        	contentType: 'application/json; charset=utf-8',
+        	data: JSON.stringify(booking),
+        	dataType: 'text',
+        	success: function(result) 
+        	{
+           		if(result == "added")
+           		{
+           			$('.form').hide('clip');
+           			//the booking has been added to the database so we need to reload the table
+           			$('#tabs-1').load('/table',function(){
+           				dragRows();
+           			});
+           		} 	
+           		else
+           			alert(result);
+           		//clear the form!
+           		$('#bookingForm').find("input[type=text], textarea").val("");
+	       	}
+		});
+	});
 });
 
 
@@ -841,15 +841,13 @@ function addClick()
 /*********************************************************************************************************/
 function dropRows()
 {
-
-	
 	//need to make the driver divs droppable
 	 $('#DriversAvail div').droppable({
 	 	tolerance:'pointer',
 	 	hoverClass: "drop-hover" ,
 	 	drop:function(event, ui){
-	 		
-			//need some magic to happen which makes the job remove from the list and set it to being assigned on the database
+			//need some magic to happen which makes the job remove 
+			//from the list and set it to being assigned on the database
 			var driverId = $(this).find('.driverid').text();
 			//As long as the id is always the first column on the table this this works
 			var jobId = ui.draggable[0].cells[0].textContent;
@@ -861,12 +859,8 @@ function dropRows()
 			});
 			if(done)
 			{
-				console.log('done');
 				return;
 			}
-				
-
-
 			var num_escorts = ui.draggable[0].cells[7].textContent;
 			var details = new Object();
 			var thisObj = $(this);
@@ -906,7 +900,6 @@ function dropRows()
 					buttons: {
 						"Ok": function() {
 							$( this ).dialog( "close" );
-							
 							details.escort1 = $('#esc1').val();
 							details.escort2 = $('#esc2').val();
 							details.escort3 = $('#esc3').val();
@@ -920,13 +913,18 @@ function dropRows()
 					        	data: JSON.stringify(details),
 					        	dataType: 'text',
 					        	success: function(result) {
-					            	//as the job has now been dispatched we need to do something to let the user know.
-					            	ui.draggable[0].cells[6].innerHTML = "<img src='/static/Tick-32.png' />";
+					            	//as the job has now been dispatched we 
+					            	//need to do something to let the user know.
+					            	ui.draggable[0].cells[6].innerHTML = 
+					            		"<img src='/static/Tick-32.png' />";
 					           	}
 				    		});
 				    		var thtml = thisObj;
 							//lets add the dropped driver to the lower list
-					 		var testDiv = '<div id="'+thisObj.attr('id')+'" class="drivers drivers_uavail_inner">'+thisObj.html()+'<span class="hidden jobid">'+jobId+'</span></div>';
+					 		var testDiv = '<div id="'+thisObj.attr('id')+
+					 			'" class="drivers drivers_uavail_inner">'+
+					 			thisObj.html()+'<span class="hidden jobid">'+
+					 			jobId+'</span></div>';
 					 		$('.drivers_unavil').append(testDiv);
 							//remove the one it was dropped on
 							thisObj.remove();
@@ -944,7 +942,6 @@ function dropRows()
 						}
 					}
 					});
-				
 			}
 			else
 			{
@@ -963,15 +960,14 @@ function dropRows()
 	    		});
 	    		var thtml = $(this);
 				//lets add the dropped driver to the lower list
-		 		var testDiv = '<div id="'+$(this).attr('id')+'" class="drivers drivers_uavail_inner">'+$(this).html()+'<span class="hidden jobid">'+jobId+'</span></div>';
+		 		var testDiv = '<div id="'+$(this).attr('id')+
+		 			'" class="drivers drivers_uavail_inner">'+
+		 			$(this).html()+'<span class="hidden jobid">'+jobId+'</span></div>';
 		 		$('.drivers_unavil').append(testDiv);
 				//remove the one it was dropped on
 				$(this).remove();
 				addClick();
 			}
-			
-
-			
 	 	},
 	 });
 }

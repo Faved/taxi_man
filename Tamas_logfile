@@ -685,3 +685,52 @@
 [19/Apr/2013 12:59:33] DEBUG [tamas.views:46] faved - loaded all jobs from home
 [21/Apr/2013 01:03:37] DEBUG [tamas.views:46] faved - loaded all jobs from home
 [21/Apr/2013 01:05:23] DEBUG [tamas.views:46] faved - loaded all jobs from home
+[21/Apr/2013 15:58:51] DEBUG [tamas.views:46] faved - loaded all jobs from home
+[21/Apr/2013 16:00:09] DEBUG [tamas.views:46] faved - loaded all jobs from home
+[21/Apr/2013 16:01:14] DEBUG [tamas.views:308] faved - Accepted remote booking with job id of: 63
+[21/Apr/2013 16:19:29] DEBUG [tamas.views:46] faved - loaded all jobs from home
+[21/Apr/2013 16:38:35] DEBUG [tamas.views:46] faved - loaded all jobs from home
+[21/Apr/2013 16:38:37] DEBUG [tamas.views:46] faved - loaded all jobs from home
+[21/Apr/2013 16:53:24] DEBUG [tamas.views:46] faved - loaded all jobs from home
+[21/Apr/2013 16:53:34] DEBUG [tamas.views:282] faved - made driver available 
+[21/Apr/2013 16:53:37] DEBUG [tamas.views:308] faved - Accepted remote booking with job id of: 64
+[21/Apr/2013 16:53:37] DEBUG [tamas.views:242] faved - Added driver: 1 to booking: 63
+[21/Apr/2013 16:53:37] DEBUG [tamas.views:46] faved - loaded all jobs from home
+[21/Apr/2013 16:53:40] DEBUG [tamas.views:282] faved - made driver available 
+[21/Apr/2013 16:53:46] DEBUG [tamas.views:46] faved - loaded all jobs from home
+[21/Apr/2013 16:53:49] DEBUG [tamas.views:203] faved - Requested booking info for job: 63
+[21/Apr/2013 16:53:56] DEBUG [tamas.views:46] faved - loaded all jobs from home
+[21/Apr/2013 16:53:56] DEBUG [tamas.views:46] faved - loaded all jobs from home
+[21/Apr/2013 16:53:56] DEBUG [tamas.views:46] faved - loaded all jobs from home
+[21/Apr/2013 16:54:00] DEBUG [tamas.views:46] faved - loaded all jobs from home
+[21/Apr/2013 16:54:37] DEBUG [tamas.views:46] faved - loaded all jobs from home
+[21/Apr/2013 16:54:39] DEBUG [tamas.views:242] faved - Added driver: 1 to booking: 63
+[21/Apr/2013 16:54:40] DEBUG [tamas.views:46] faved - loaded all jobs from home
+[21/Apr/2013 16:54:50] DEBUG [tamas.views:46] faved - loaded all jobs from home
+[21/Apr/2013 16:55:53] DEBUG [tamas.views:46] faved - loaded all jobs from home
+[21/Apr/2013 16:58:23] DEBUG [tamas.views:49] faved - loaded all jobs from home
+[21/Apr/2013 16:58:40] DEBUG [tamas.views:206] faved - Requested booking info for job: 63
+[21/Apr/2013 16:59:15] DEBUG [tamas.views:51] faved - loaded all jobs from home
+[21/Apr/2013 16:59:38] DEBUG [tamas.views:52] faved - loaded all jobs from home
+[21/Apr/2013 17:00:37] DEBUG [tamas.views:50] faved - loaded all jobs from home
+[21/Apr/2013 17:01:12] DEBUG [tamas.views:50] faved - loaded all jobs from home
+[21/Apr/2013 17:01:25] DEBUG [tamas.views:50] faved - loaded all jobs from home
+[21/Apr/2013 17:02:54] DEBUG [tamas.views:50] faved - loaded all jobs from home
+[21/Apr/2013 17:03:22] DEBUG [tamas.views:50] faved - loaded all jobs from home
+[21/Apr/2013 17:03:43] DEBUG [tamas.views:49] faved - loaded all jobs from home
+[21/Apr/2013 17:03:46] DEBUG [tamas.views:337] faved - Cleared job: 63
+[21/Apr/2013 17:03:48] DEBUG [tamas.views:245] faved - Added driver: 1 to booking: 64
+[21/Apr/2013 17:03:54] DEBUG [tamas.views:206] faved - Requested booking info for job: 64
+[21/Apr/2013 17:10:11] DEBUG [tamas.views:49] faved - loaded all jobs from home
+[21/Apr/2013 17:11:42] DEBUG [tamas.views:49] faved - loaded all jobs from home
+[21/Apr/2013 17:13:33] DEBUG [tamas.views:49] faved - loaded all jobs from home
+[21/Apr/2013 17:14:12] DEBUG [tamas.views:49] faved - loaded all jobs from home
+[21/Apr/2013 17:15:43] DEBUG [tamas.views:49] faved - loaded all jobs from home
+[21/Apr/2013 17:15:56] DEBUG [tamas.views:324] faved - Declined remote booking with job id of: 65
+[21/Apr/2013 17:16:13] DEBUG [tamas.views:49] faved - loaded all jobs from home
+[21/Apr/2013 17:16:24] DEBUG [tamas.views:49] faved - loaded all jobs from home
+[21/Apr/2013 17:16:58] DEBUG [tamas.views:324] faved - Declined remote booking with job id of: 65
+[21/Apr/2013 17:18:02] DEBUG [tamas.views:49] faved - loaded all jobs from home
+[21/Apr/2013 17:18:15] DEBUG [tamas.views:324] faved - Declined remote booking with job id of: 65
+[21/Apr/2013 17:18:45] DEBUG [tamas.views:49] faved - loaded all jobs from home
+[21/Apr/2013 17:19:02] DEBUG [tamas.views:324] faved - Declined remote booking with job id of: 65

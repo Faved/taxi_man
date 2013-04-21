@@ -31,13 +31,16 @@ def home(request):
 	for b in bookings:
 		if b.driver != None:
 			tempArray.append(b.driver.id)
+
 	driverAvail = []
 	driverBusy = []
 	for d in drivers:
-		if d.id in tempArray:
+		if d.driver.id in tempArray:
 			driverBusy.append(d)
 		else:
 			driverAvail.append(d)
+
+	
 	
 	t = get_template('content.html')
 	user = request.user
