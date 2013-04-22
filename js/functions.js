@@ -1,3 +1,13 @@
+/*
+ * TaMaS Project
+ *
+ *
+ * Copyright 2013 Alan Bennett
+ * Released under the MIT license
+ * https://github.com/Faved/taxi_man
+ *
+ * You are free to use this code
+ */ 
 // this is the functions 
 // need a couple of golbal vars
 var listOfPlaces = new Array();
@@ -7,66 +17,15 @@ var map;
 
 $(function() {
 	//one of the first things to do is to create a list of objects form the database
-	$.ajax({
-        	url: '/places',
-        	type: 'GET',
-        	contentType: 'application/json; charset=utf-8',
-        	dataType: 'text',
-        	success: function(result) {
-            	if(result != "none")
-            	{
-            		var temp = jQuery.parseJSON(result);
-            		for(var i=0; i<temp.length;i++)
-            		{
-            			var tempObj = new Object();
-            			tempObj.place = temp[i].fields['placeName'];
-            			tempObj.town = temp[i].fields['townName'];
-            			tempObj.postcode = temp[i].fields['postCode'];
-
-            			listOfPlaces.push(tempObj);
-
-            		}
-            	}
-           	}
-		});
-
-//Stuff for the clock:
-// Create two variable with the names of the months and days in an array
-var monthNames = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ]; 
-var dayNames= ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
-
-// Create a newDate() object
-var newDate = new Date();
-// Extract the current date from Date object
-newDate.setDate(newDate.getDate());
-// Output the day, date, month and year   
-$('#Date').html(dayNames[newDate.getDay()] + " " + newDate.getDate() + ' ' + monthNames[newDate.getMonth()] + ' ' + newDate.getFullYear());
-
-setInterval( function() {
-	// Create a newDate() object and extract the seconds of the current time on the visitor's
-	var seconds = new Date().getSeconds();
-	// Add a leading zero to seconds value
-	$("#sec").html(( seconds < 10 ? "0" : "" ) + seconds);
-	},1000);
-	
-setInterval( function() {
-	// Create a newDate() object and extract the minutes of the current time on the visitor's
-	var minutes = new Date().getMinutes();
-	// Add a leading zero to the minutes value
-	$("#min").html(( minutes < 10 ? "0" : "" ) + minutes);
-    },1000);
-	
-setInterval( function() {
-	// Create a newDate() object and extract the hours of the current time on the visitor's
-	var hours = new Date().getHours();
-	// Add a leading zero to the hours value
-	$("#hours").html(( hours < 10 ? "0" : "" ) + hours);
-    }, 1000);	
-
+	getPlaceNames();
+	//Create the clock
+	createClock();
+	//Init the tabs
     $( "#tabs" ).tabs();
     $( "#tabs2" ).tabs();
 	//going to have some fun to see if we can create our own lightbox effect!
-	$('.flex').click(function(){
+	$('.flex').click(function()
+	{
 		$('.form').show('clip');
 		loadmap();
 		//now to change its postition so that it is at the top...
@@ -74,8 +33,11 @@ setInterval( function() {
 		var currentHours = d.getHours(); 
 		currentHours = ( currentHours < 10 ? "0" : "" ) + currentHours;
 		document.getElementById('time_input').value = currentHours+":"+d.getMinutes();
-		});   
-	$(document).keyup(function(e){
+	});   
+	//Set the key binds
+	$(document).keyup(function(e)
+	{
+		//ESC button
 		if(e.which == 27)
 		{
 			if($('.form').css('display') != 'none')
@@ -85,6 +47,7 @@ setInterval( function() {
 			}	
 
 		};
+		//Ctrl+n & Ctrl+N
 		if((e.which == 110 || e.which == 78) && e.ctrlKey)
 		{
 			$('.form').show('clip');
@@ -95,144 +58,24 @@ setInterval( function() {
 			document.getElementById('time_input').value = currentHours+":"+d.getMinutes();
 		};
 	});
+	//Add on click to the image on the booking form
 	$('.form-inner img').click(function(){
 		$('.form').hide('clip');
 		$('#bookingForm').find("input[type=text], textarea").val("");
 	});
+	//add auto todays date on booking form
 	var d = new Date();
 	$('#date_input').val(d.toJSON().slice(0,10));
-	
+	//show hide function for check box on booking form
 	$('#is_Account').click(function(){
 		$('.accountCreate').toggle();
 	});
-/*****************************************************************************************************
-
-To search for new books that have come in via the API
-******************************************************************************************************/
-   
-	var inters = setInterval(
-	 function()
-	 {
-	 	if($('#dialog-newBooking').css('display') == 'none')
-	 	{
-		 	$.ajax({
-		        	url: '/checkForBooking',
-		        	type: 'GET',
-		        	contentType: 'application/json; charset=utf-8',
-		        	dataType: 'text',
-		        	success: function(result) {
-		            	if(result != "none")
-		            	{
-		            		var temp = jQuery.parseJSON(result);
-		            		console.log(temp);
-		            		//first we need to create the html to put in the dialog.
-		            		var html = 	"<div class='newBookingInformation'>"+
-		            					"<strong>Date: </strong>"+temp[0].fields['date']+"<br/>"+
-		            					"<strong>Pickup Time:</strong> "+temp[0].fields['pickup_time']+"<br/>"+
-		            					"<strong>Pickup: </strong>"+temp[0].fields['pickup_address']+"<br/>"+
-		            					"<strong>Destination:</strong> "+temp[0].fields['destin_address']+"<br/>"+
-		            					"<strong>No. Passengers:</strong> "+temp[0].fields['no_passengers']+"<br/>"+
-		            					"<strong>Vehicle: </strong>"+temp[0].fields['vehicle_type']+"<br/>"+
-		            					"<strong>More Info:</strong> "+temp[0].fields['extra_info']+
-		            					"</div>";
-		            		$('.newbookingDetails').append(html);
-
-		            		$("#dialog-newBooking").dialog({
-								resizable: false,
-								height:350,
-								modal: false,
-								buttons: {
-									"Accept Booking": function() {
-										$( this ).dialog( "close" );
-										$(this).css('display','none');
-										$('.newbookingDetails').html("");
-										// if accepted send a message to the server to set it as accepted by the logged in user
-										var tempObj = new Object();
-										tempObj.jobid = temp[0].pk;
-										$.ajax({
-								        	url: '/comfirmBooking/',
-								        	type: 'POST',
-								        	contentType: 'application/json; charset=utf-8',
-								        	data: JSON.stringify(tempObj),
-								        	dataType: 'text',
-								        	success: function(result) 
-								        	{
-							        		    $('#tabs-1').load('/table',function(){
-								           			dragRows();
-									           		dropRows();
-									           	});    		
-									       	}
-										});
-
-									
-									},
-									"Decline Booking": function() 
-									{
-										
-										var reason = '';
-										var thisdial = $(this);
-										thisdial.dialog( "close" );
-										apprise('Please enter a reason for declining', {'verify':true,'input' : true,}, function(r) {
-											if(r) { 
-												reason = r;
-											} 
-											
-											thisdial.css('display','none');
-											$('.newbookingDetails').html("");
-
-											var tempObj = new Object();
-										tempObj.jobid = temp[0].pk;
-										tempObj.reason = reason;
-										console.log(tempObj);
-										$.ajax({
-								        	url: '/declineBooking/',
-								        	type: 'POST',
-								        	contentType: 'application/json; charset=utf-8',
-								        	data: JSON.stringify(tempObj),
-								        	dataType: 'text',
-								        	success: function(result) 
-								        	{
-							        		    $('#tabs-1').load('/table',function(){
-								           			dragRows();
-									           		dropRows();
-									           	});    		
-									       	}
-										});
-										});
-										
-
-
-									}
-								},
-								 close: function( event, ui ) {
-								 	// 	$( this ).dialog( "close" );
-										// $(this).css('display','none');
-										// $('.newbookingDetails').html("");
-								},
-								});
-
-
-		            	}
-		           	}
-	    		});
-		}
-	 	//need to make the time something reasonable, probs 60 seconds.
-	 }, 10000);
-
-
-	// this will refresh the table, if there is a new entry.
-	// $('.flex').fancybox(
-	// {
-	// 	type: 'ajax',
-	// 	afterClose: function(){
-	// 		alert('done!');
-	// 	}
-	// }
-	// );
+	// Create timer to search for new bookings
+	createTimerForNewBookings();
+	//Add the drag and drop row effects to the tabl and the driver elements
 	dragRows();
 	dropRows();
-
-
+	//Some code needed to make sure that the google auto-complete is visable
 	var pacContainerInitialized = false; 
     $('#pickup_input').keypress(function() { 
             if (!pacContainerInitialized) { 
@@ -240,105 +83,101 @@ To search for new books that have come in via the API
                     pacContainerInitialized = true; 
             } 
     }); 	
-/*****************************************************************************************************
+	/*****************************************************************************************************
 
-Search Form
-******************************************************************************************************/
-$('#jobSearch').submit(function(event){
-	// cancels the form submission
-    event.preventDefault();
-    var search = new Object();
-    search.startdate = $('#start_date').val();
-    search.enddate = $('#end_date').val();
-    search.driver = $('#driver_search').val();
-    search.account = $('#account_search').val();
-    console.log(search);
-	$.ajax({
-        	url: '/search/',
-        	type: 'POST',
-        	contentType: 'application/json; charset=utf-8',
-        	data: JSON.stringify(search),
-        	dataType: 'text',
-        	success: function(result) 
-        	{
-        		console.log(result);
-        		$('.results').html(result);          		
-	       	}
-		});
-
-
-});
-/*****************************************************************************************************
-
-Submit a booking
-******************************************************************************************************/
-$('#bookingForm').submit(function(event){
-    // cancels the form submission
-    event.preventDefault();
-    // need all the available details from the form.
-	//TODO: work out the leave time.
-	var pickup = $('#pickup_input').val();
-	//due to the async nature of the google maps functions need to do it this way:
-	getLeavetime(pickup,function(result)
-	{
-		//result is the time in seconds google thinks it takes to travel from bodmin to the pickup
-		//as it is an async call we need to wait for that o finish before we do anything else
-		booking = new Object();
-		booking.pickup = pickup;
-		booking.date = $('#date_input').val();
-		booking.time = $('#time_input').val();
-		booking.travelTime = result;
-		booking.destination = $('#destin_input').val();
-		booking.num_of_pass = $('#pass_no_input').val();
-		booking.cus_name = $('#cust_name_input').val();
-		booking.cus_contact = $('#cust_contact_input').val();
-		booking.vehicle = $('#vehicle_input').val();
-		if($('#is_Account').prop('checked'))
-			booking.isaccount = 'true';
-		else
-			booking.isaccount = 'false';
-		booking.moreinfo = $('#info_input').val();
-		booking.num_escorts = $('#num_escorts_input').val();
-		booking.account = $('#account_input').val();
-
-		//now going to do an ajax request to pass the variables in to 
-		//add it to the database, then reload the table.
+	Search Form
+	******************************************************************************************************/
+	$('#jobSearch').submit(function(event){
+		// cancels the form submission
+	    event.preventDefault();
+	    var search = new Object();
+	    search.startdate = $('#start_date').val();
+	    search.enddate = $('#end_date').val();
+	    search.driver = $('#driver_search').val();
+	    search.account = $('#account_search').val();
+	    console.log(search);
 		$.ajax({
-        	url: '/add/',
-        	type: 'POST',
-        	contentType: 'application/json; charset=utf-8',
-        	data: JSON.stringify(booking),
-        	dataType: 'text',
-        	success: function(result) 
-        	{
-           		if(result == "added")
-           		{
-           			$('.form').hide('clip');
-           			//the booking has been added to the database so we need to reload the table
-           			$('#tabs-1').load('/table',function(){
-           				dragRows();
-           			});
-           		} 	
-           		else
-           			alert(result);
-           		//clear the form!
-           		$('#bookingForm').find("input[type=text], textarea").val("");
-	       	}
+	        	url: '/search/',
+	        	type: 'POST',
+	        	contentType: 'application/json; charset=utf-8',
+	        	data: JSON.stringify(search),
+	        	dataType: 'text',
+	        	success: function(result) 
+	        	{
+	        		console.log(result);
+	        		$('.results').html(result);          		
+		       	}
+			});
+
+
+	});
+	/*****************************************************************************************************
+
+	Submit a booking
+	******************************************************************************************************/
+	$('#bookingForm').submit(function(event){
+	    // cancels the form submission
+	    event.preventDefault();
+	    // need all the available details from the form.
+		//TODO: work out the leave time.
+		var pickup = $('#pickup_input').val();
+		//due to the async nature of the google maps functions need to do it this way:
+		getLeavetime(pickup,function(result)
+		{
+			//result is the time in seconds google thinks it takes to travel from bodmin to the pickup
+			//as it is an async call we need to wait for that o finish before we do anything else
+			booking = new Object();
+			booking.pickup = pickup;
+			booking.date = $('#date_input').val();
+			booking.time = $('#time_input').val();
+			booking.travelTime = result;
+			booking.destination = $('#destin_input').val();
+			booking.num_of_pass = $('#pass_no_input').val();
+			booking.cus_name = $('#cust_name_input').val();
+			booking.cus_contact = $('#cust_contact_input').val();
+			booking.vehicle = $('#vehicle_input').val();
+			if($('#is_Account').prop('checked'))
+				booking.isaccount = 'true';
+			else
+				booking.isaccount = 'false';
+			booking.moreinfo = $('#info_input').val();
+			booking.num_escorts = $('#num_escorts_input').val();
+			booking.account = $('#account_input').val();
+
+			//now going to do an ajax request to pass the variables in to 
+			//add it to the database, then reload the table.
+			$.ajax({
+	        	url: '/add/',
+	        	type: 'POST',
+	        	contentType: 'application/json; charset=utf-8',
+	        	data: JSON.stringify(booking),
+	        	dataType: 'text',
+	        	success: function(result) 
+	        	{
+	           		if(result == "added")
+	           		{
+	           			$('.form').hide('clip');
+	           			//the booking has been added to the database so we need to reload the table
+	           			$('#tabs-1').load('/table',function(){
+	           				dragRows();
+	           			});
+	           		} 	
+	           		else
+	           			alert(result);
+	           		//clear the form!
+	           		$('#bookingForm').find("input[type=text], textarea").val("");
+		       	}
+			});
 		});
 	});
-});
-
-
-
-
-/********************************************************************************************************
+	/********************************************************************************************************
 	
 	Context Menus
 
 	first is for the unavailable drivers
 	followed by the table
 	
-/*********************************************************************************************************/
+	/*********************************************************************************************************/
 	$.contextMenu({
         selector: '.drivers_uavail_inner', 
         callback: function(key, options) {
@@ -737,26 +576,182 @@ $.contextMenu({
 	           
 	        }
 	    });
-
-	//was used for testing to try and over ride the google autocomplete
-	// $('#destin_input').change(function(event)
-	// {
-	// 	event.preventDefault();
-	// 	makeDirections();
-	// });
-	// $('#pickup_input').change(function(event){
-	// 	event.preventDefault();
-	// 	makeDirections();
-	// })
-
-
-
-
-
-
-
   });
+/*****************************************************************************************************
 
+To search for new books that have come in via the API
+******************************************************************************************************/
+function createTimerForNewBookings()
+{
+	//set interval to 30 seconds
+	var inters = setInterval(
+	 function()
+	 {
+	 	if($('#dialog-newBooking').css('display') == 'none')
+	 	{
+	 		//send an ajax signal to the check for booking page
+		 	$.ajax({
+		        url: '/checkForBooking',
+		        type: 'GET',
+		        contentType: 'application/json; charset=utf-8',
+		        dataType: 'text',
+		        success: function(result) {
+		        	//if there are results, then create the html for popup and show it
+		           	if(result != "none")
+		           	{
+		           		var temp = jQuery.parseJSON(result);
+		           		console.log(temp);
+		           		//first we need to create the html to put in the dialog.
+		           		var html = 	"<div class='newBookingInformation'>"+
+		           					"<strong>Date: </strong>"+temp[0].fields['date']+"<br/>"+
+		           					"<strong>Pickup Time:</strong> "+temp[0].fields['pickup_time']+"<br/>"+
+		           					"<strong>Pickup: </strong>"+temp[0].fields['pickup_address']+"<br/>"+
+		           					"<strong>Destination:</strong> "+temp[0].fields['destin_address']+"<br/>"+
+		           					"<strong>No. Passengers:</strong> "+temp[0].fields['no_passengers']+"<br/>"+
+		           					"<strong>Vehicle: </strong>"+temp[0].fields['vehicle_type']+"<br/>"+
+		           					"<strong>More Info:</strong> "+temp[0].fields['extra_info']+
+		           					"</div>";
+		           		$('.newbookingDetails').append(html);
+		           		//SHow the popup
+	            		$("#dialog-newBooking").dialog({
+							resizable: false,
+							height:350,
+							modal: false,
+							buttons: {
+								//if accept
+								"Accept Booking": function() {
+									$( this ).dialog( "close" );
+									$(this).css('display','none');
+									$('.newbookingDetails').html("");
+									// if accepted send a message to the server to set it as accepted by the logged in user
+									var tempObj = new Object();
+									tempObj.jobid = temp[0].pk;
+									$.ajax({
+							        	url: '/comfirmBooking/',
+							        	type: 'POST',
+							        	contentType: 'application/json; charset=utf-8',
+							        	data: JSON.stringify(tempObj),
+							        	dataType: 'text',
+							        	success: function(result) 
+							        	{
+						        		    $('#tabs-1').load('/table',function(){
+							           			dragRows();
+								           		dropRows();
+								           	});    		
+								       	}
+									});
+								},
+								"Decline Booking": function() 
+								{
+									var reason = '';
+									var thisdial = $(this);
+									thisdial.dialog( "close" );
+									apprise('Please enter a reason for declining', {'verify':true,'input' : true,}, function(r) {
+										if(r) { 
+											reason = r;
+										} 											
+										thisdial.css('display','none');
+										$('.newbookingDetails').html("");
+										var tempObj = new Object();
+										tempObj.jobid = temp[0].pk;
+										tempObj.reason = reason;
+										console.log(tempObj);
+										$.ajax({
+								        	url: '/declineBooking/',
+								        	type: 'POST',
+								        	contentType: 'application/json; charset=utf-8',
+								        	data: JSON.stringify(tempObj),
+								        	dataType: 'text',
+								        	success: function(result) 
+								        	{
+							        		    $('#tabs-1').load('/table',function(){
+								           			dragRows();
+									           		dropRows();
+									           	});    		
+									       	}
+										});
+									});
+								}
+							},
+							close: function( event, ui ) {
+								 	// 	$( this ).dialog( "close" );
+										// $(this).css('display','none');
+										// $('.newbookingDetails').html("");
+							},
+						});
+	            	}
+	           	}
+    		});
+		}
+	 	//need to make the time something reasonable, probs 60 seconds.
+	 }, 10000);
+}
+//function that creates a JavaScript clock to run on main page
+function createClock()
+{
+	// Create two variable with the names of the months and days in an array
+	var monthNames = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ]; 
+	var dayNames= ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
+
+	// Create a newDate() object
+	var newDate = new Date();
+	// Extract the current date from Date object
+	newDate.setDate(newDate.getDate());
+	// Output the day, date, month and year   
+	$('#Date').html(dayNames[newDate.getDay()] + " " + newDate.getDate() + ' ' + monthNames[newDate.getMonth()] + ' ' + newDate.getFullYear());
+
+	setInterval( function() 
+	{
+		// Create a newDate() object and extract the seconds of the current time on the visitor's
+		var seconds = new Date().getSeconds();
+		// Add a leading zero to seconds value
+		$("#sec").html(( seconds < 10 ? "0" : "" ) + seconds);
+	},1000);
+		
+	setInterval( function() 
+	{
+		// Create a newDate() object and extract the minutes of the current time on the visitor's
+		var minutes = new Date().getMinutes();
+		// Add a leading zero to the minutes value
+		$("#min").html(( minutes < 10 ? "0" : "" ) + minutes);
+	},1000);
+		
+	setInterval( function()
+	{
+		// Create a newDate() object and extract the hours of the current time on the visitor's
+		var hours = new Date().getHours();
+		// Add a leading zero to the hours value
+		$("#hours").html(( hours < 10 ? "0" : "" ) + hours);
+	}, 1000);	
+}
+// Function to get a list of place names from the database
+function getPlaceNames()
+{
+	$.ajax({
+    	url: '/places',
+    	type: 'GET',
+    	contentType: 'application/json; charset=utf-8',
+    	dataType: 'text',
+    	success: function(result) {
+        	if(result != "none")
+        	{
+        		var temp = jQuery.parseJSON(result);
+        		//create an object of each place found on the database and add to the local array
+        		for(var i=0; i<temp.length;i++)
+        		{
+        			var tempObj = new Object();
+        			tempObj.place = temp[i].fields['placeName'];
+        			tempObj.town = temp[i].fields['townName'];
+        			tempObj.postcode = temp[i].fields['postCode'];
+
+        			listOfPlaces.push(tempObj);
+
+        		}
+        	}
+       	}
+	});
+}
+// Function to get information about a job to display in a popup
 function getJobInfo(jobid,callback)
 {
 	$.ajax({
@@ -820,9 +815,6 @@ function getJobInfo(jobid,callback)
 			}
 		});
 }
-
-
-
 
 //need a function to add clicks to the new created elements
 function addClick()
@@ -971,44 +963,36 @@ function dropRows()
 	 	},
 	 });
 }
-
+//function to make a row draggable
 function dragRows()
 {
 	 $(".tableOfJobs tr").draggable({
-              helper:function(event) {
-              		var t = $(event.target).closest('tr');
-              		var l = [];
-              		l.push(t[0].children[5].innerHTML);
-              		l.push(t[0].children[1].innerHTML);
-              		l.push(t[0].children[3].innerHTML);
-              		l.push(t[0].children[4].innerHTML);
-              		for(var i = 0; i < l.length;i++)
-              		{
-              			l[i] = l[i].trim();
-              			l[i] = l[i].substring((l[i].indexOf('>'))+1,l[i].lastIndexOf('<'));
-              			
-              			
-              		}
-					var tableDrag = '<div class="tableDrag">';
-					tableDrag += '<div class="drag-head">'+l[0]+'</div>';
-					tableDrag += 'Leave Time: '+l[1]+'<br/>';
-					tableDrag += 'Pickup: '+l[2]+'<br/>';
-					tableDrag += 'Destination: '+l[3]+'<br/>';
-					tableDrag += '</div>';
-              		
+	      helper:function(event) {
+	      		var t = $(event.target).closest('tr');
+	      		var l = [];
+	      		l.push(t[0].children[5].innerHTML);
+	      		l.push(t[0].children[1].innerHTML);
+	      		l.push(t[0].children[3].innerHTML);
+	      		l.push(t[0].children[4].innerHTML);
+	      		for(var i = 0; i < l.length;i++)
+	      		{
+	      			l[i] = l[i].trim();
+	      			l[i] = l[i].substring((l[i].indexOf('>'))+1,l[i].lastIndexOf('<'));
+	      			
+	      			
+	      		}
+				var tableDrag = '<div class="tableDrag">';
+				tableDrag += '<div class="drag-head">'+l[0]+'</div>';
+				tableDrag += 'Leave Time: '+l[1]+'<br/>';
+				tableDrag += 'Pickup: '+l[2]+'<br/>';
+				tableDrag += 'Destination: '+l[3]+'<br/>';
+				tableDrag += '</div>';
+	      		
 
-                  return $(tableDrag);
-              },
-              cursorAt: { left: -20}
-          });
-	// $(document).bind('mousemove', function(e){
-	//     $('#test').css({
-	//        left:  e.pageX,
-	//        top:   e.pageY
-	//     });
-
-	// });
-	console.log('triggered');
+	          return $(tableDrag);
+	      },
+	      cursorAt: { left: -20}
+	  });
 }
 
 // setting the hieght of the driver_avail divs
@@ -1029,11 +1013,19 @@ function setDriverHeight()
 		$(this).css('color','red');
 	});
 }
+//UK postcode checker
+function isValidPostcode(p) {
+	var postcodeRegEx = /[A-Z]{1,2}[A-Z0-9]{1,2} ?[0-9][A-Z]{2}/i;
+	return postcodeRegEx.test(p);
+}
 var autocomplete ;
 var autocomplete2;
 
-// This is the code for the drop down from the google maps api
-// do map stuff function
+/********************************************************************************************************
+	
+	Google Maps code
+	
+/*********************************************************************************************************/
 function loadmap()
 {
 	var mapOptions = {
@@ -1085,10 +1077,7 @@ function loadmap()
 	});
 
 }
-function isValidPostcode(p) {
-	var postcodeRegEx = /[A-Z]{1,2}[A-Z0-9]{1,2} ?[0-9][A-Z]{2}/i;
-	return postcodeRegEx.test(p);
-}
+//function to change the entry in the input box for destination - DOESNT CURRENT WORK 100%
 function changeDestination()
 {
 	var destLoc = $('#destin_input').val();
@@ -1129,6 +1118,7 @@ function changeDestination()
 	}
 	makeDirections();
 }
+//function to change the entry in the input box for Pickup - DOESNT CURRENT WORK 100%
 function changePickup()
 {
 	//get the values from the 2 text boxes
@@ -1183,15 +1173,8 @@ function changePickup()
 }
 function test(place,autocomplete)
 {
-	google.maps.event.clearListeners(autocomplete2, 'place_changed');
-	var add = place.place +", "+place.town;
-	if(place.postcode != '')
-		add += ', '+place.postcode;
-	$('#destin_input').val("fucking work");
-	
-	loadmap();
-	
 }
+//function to get the leave time by creating a fake direction plan
 function getLeavetime(pickup,callback)
 {
 	var pickupLocation = pickup;
@@ -1214,9 +1197,8 @@ function getLeavetime(pickup,callback)
 	
 		
 	});
-
-	
 }
+//function to make the Directions
 function makeDirections()
 {
 	var pickLoc = $('#pickup_input').val();
@@ -1269,6 +1251,4 @@ function makeDirections()
 			}
 	    }
   	});
-
-
 }

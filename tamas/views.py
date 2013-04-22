@@ -13,6 +13,7 @@ from datetime import date, time, timedelta
 import logging
 log = logging.getLogger(__name__)
 
+# Home page returns all bookings and drivers
 @login_required
 def home(request):
 	now = datetime.datetime.now()
@@ -31,7 +32,6 @@ def home(request):
 	for b in bookings:
 		if b.driver != None:
 			tempArray.append(b.driver.id)
-
 	driverAvail = []
 	driverBusy = []
 	for d in drivers:
@@ -39,9 +39,6 @@ def home(request):
 			driverBusy.append(d)
 		else:
 			driverAvail.append(d)
-
-	
-	
 	t = get_template('content.html')
 	user = request.user
 	html = t.render(Context({'time':now,'user':user,'bookings':bookings,'driversAvail':driverAvail,"driversUnavail":driverBusy,"completebookings":completeBookings,"accounts":accounts,"escorts":escorts,"allDrivers":alldrivers}))
@@ -49,6 +46,7 @@ def home(request):
 	log.debug(request.user.username+' - loaded all jobs from home')
 	return HttpResponse(html)
 
+# Get a new referesg of the booking table
 def table(request):
 	now = datetime.datetime.now()
 	# need to filter the results for that day and order them by the time.
@@ -59,12 +57,13 @@ def table(request):
 	html = t.render(Context({'time':now,'bookings':bookings}))
 	return HttpResponse(html)
 
+# Get a list of places on the database
 def places(request):
 	places = Addresses.objects.all()
 	returnData = serializers.serialize("json",places)
 	return HttpResponse(returnData,mimetype='application/json')
 
-
+# Get a list of jobs that have been conmpleted today
 def cleartable(request):
 	now = datetime.datetime.now()
 	# need to filter the results for that day and order them by the time.
@@ -110,6 +109,7 @@ def search(request):
 		html = t.render(Context({"results":bookings}))
 		return HttpResponse(html)
 
+# API page called from external source
 @csrf_exempt	
 def api(request):
 	if request.method == 'POST':
@@ -244,6 +244,7 @@ def addDriverToBooking(request):
 		# log it
 		log.debug(request.user.username+' - Added driver: '+data['driverid']+' to booking: '+data['jobid'])
 	return HttpResponse("OK")
+
 # This will remove a driver from a job
 @csrf_exempt
 def removeFromJob(request):
@@ -337,13 +338,12 @@ def setBookingClear(request):
 		log.debug(request.user.username+' - Cleared job: '+jobno)
 	return HttpResponse("OK")
 
-
+# Login page
 def login(request):
 	return render_to_response('login.html',
         context_instance=RequestContext(request))
 
-
-
+# Returns the time
 def time(request):
 	now = datetime.datetime.now()
 	time = now.time()
@@ -351,6 +351,7 @@ def time(request):
 	html = t.render(Context({'time':time.strftime("%H:%M:%S %Z")}))
 	return HttpResponse(html)
 
+# Check to see if a booking exisits
 def checkForBooking(request):
 	bookings = Booking.objects.filter(complete=0,entered_by=None,cancelled=0)
 	if len(bookings) < 1:
@@ -359,7 +360,7 @@ def checkForBooking(request):
 		data = serializers.serialize("json", bookings)
 		return HttpResponse(data)
 
-
+# Get the create page
 def create(request):
 	t = get_template('create.html')
 	html =t.render(Context({}))

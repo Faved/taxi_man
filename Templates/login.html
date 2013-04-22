@@ -9,27 +9,42 @@
 <div id='top'>
 	<div class='logo'>
 				TAMAS
-			</div>
+	</div>
 </div>
 <div class='welcome'>
-	<p>Welcome to TaMaS, this sytem requires that you be logged in to use it.</p><p> Please enter you details below. </p><p>If you do not have a login, please speak to an administrator.</p>
+	<p>
+		Welcome to TaMaS, this sytem requires that you be logged in to use it.
+	</p>
+	<p> 
+		Please enter you details below. 
+	</p>
+	<p>
+		If you do not have a login, please speak to an administrator.
+	</p>
 </div>
 <div class='login_page'>
-<form method="post" action="{% url 'django.contrib.auth.views.login' %}">
-{% csrf_token %}
-<table>
-<tr>
-    <td>{{ form.username.label_tag }}</td>
-    <td>{{ form.username }}</td>
-</tr>
-<tr>
-    <td>{{ form.password.label_tag }}</td>
-    <td>{{ form.password }}</td>
-</tr>
-</table>
-
-<input type="submit" value="login"  class='login_submit'/>
-<input type="hidden" name="next" value="{{ next }}" />
-</form>
+	<form method="post" action="{% url 'django.contrib.auth.views.login' %}">
+		{% csrf_token %}
+		<table>
+			<tr>
+		    	<td>
+		    		{{ form.username.label_tag }}
+		    	</td>
+		    	<td>
+		    		{{ form.username }}
+		    	</td>
+			</tr>
+			<tr>
+			    <td>
+			    	{{ form.password.label_tag }}
+			    </td>
+			    <td>
+			    	{{ form.password }}
+			    </td>
+			</tr>
+		</table>
+		<input type="submit" value="login"  class='login_submit'/>
+		<input type="hidden" name="next" value="{{ next }}" />
+	</form>
 </div>
 {% endblock %}

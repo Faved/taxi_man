@@ -1,5 +1,24 @@
+<!--
+ * TaMaS Project
+ *
+ *
+ * Copyright 2013 Alan Bennett
+ * Released under the MIT license
+ * https://github.com/Faved/taxi_man
+ *
+ * 
+ */ -->
  <!-- the current available drivers will show here. currently hard coded, this will come from the database eventually -->
-		    {%for d in driversAvail%}
-		    <div id="driver{{d.id}}" class="drivers_avail drivers"><p> {{d.driver.callsign}} <br/>{{d.driver.name}}</p><span class='hidden driverid'>{{d.driver.id}}</span></div>
-		   
-		    {%endfor%}
+{%for d in driversAvail%}
+	<div id="driver{{d.id}}" class="drivers_avail drivers">
+		<p> 
+			Callsign: {{d.driver.callsign}} 
+			<br/>
+			Name: {{d.driver.name}}
+		</p>
+		<span class='hidden driverid'>
+			{{d.driver.id}}
+		</span>
+	</div>
+
+{%endfor%}

@@ -1,5 +1,15 @@
 <!DOCTYPE html>
 <!-- This is the base template for the django powered website TAMAS All of the other templated will derive from this one. -->
+<!--
+ * TaMaS Project
+ *
+ *
+ * Copyright 2013 Alan Bennett
+ * Released under the MIT license
+ * https://github.com/Faved/taxi_man
+ *
+ * 
+ */ -->
 <html>
 <head>
 	<title></title>
@@ -10,6 +20,7 @@
 	<link rel="stylesheet" href="/static/jquery.qtip.css">
 	<link rel="stylesheet" href="/static/apprise.css">
 	<!-- javascript includes-->
+
 	<!-- jquery -->
 	<script src="/static/jquery.js" ></script>
 	<!-- jqueryui -->
@@ -23,10 +34,8 @@
 	<script src="/static/jquery.contextMenu.js" type="text/javascript"></script>
 	<!-- popup menu -->
 	<script src="/static/jquery.qtip.js" type="text/javascript"></script>
+	<!-- dialog library -->
 	<script src="/static/apprise-1.5.full.js" type="text/javascript"></script>
-
-
-
 </head>
 <body>
 	<!-- Contiainer div -->
@@ -42,68 +51,94 @@
 
 		<!-- footer -->
 		<div class="footer">
-			<div class='footer-inner'>
-				<img src="/static/closeicon.png"/>
-						<!-- this is the layout which will be used for creating bookings -->
-				<div id='custLeft'>
-				Will go here
-				</div>
+							
 		</div>
 	</div>
+	<!-- 
+
+	Below divs are custom dialog boxes which alert the user about information, for example the dialog-escort div contains information about the number of escorts
+
+	 -->
 	<!-- div for comfirm -->
 	<div id="dialog-confirm" title="Cancel?" class='hidden'>
-		<p><span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>Cancel this booking?</p>
+		<p>
+			<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;">
+			</span>
+			Cancel this booking?
+		</p>
 	</div>
+	<!-- Escort prompt -->
 	<div id="dialog-escort" title="Choose Escorts" class='hidden'>
-		<p class='dia_p'><span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>Please pick escorts for booking:</p>
+		<p class='dia_p'>
+			<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;">
+			</span>
+			Please pick escorts for booking:
+		</p>
 		<div id='es1' class='es hidden'>
-			<label>Escort 1:</label>
+			<label>
+				Escort 1:
+			</label>
 			<select id='esc1' class='input select'>
 				{%for e in escorts%}
-				<option>{{e.name}}</option>
+					<option>
+						{{e.name}}
+					</option>
 				{%endfor%}
 			</select>
-
 		</div>
 		<div id='es2'class='es hidden'>
-			<label>Escort 2:</label>
+			<label>
+				Escort 2:
+			</label>
 			<select id='esc2'class='input select'>
 				{%for e in escorts%}
-				<option>{{e.name}}</option>
+					<option>
+						{{e.name}}
+					</option>
 				{%endfor%}
 			</select>
-
 		</div>
 		<div id='es3'class='es hidden'>
-			<label>Escort 3:</label>
+			<label>
+				Escort 3:
+			</label>
 			<select id='esc3' class='input select'>
 				{%for e in escorts%}
-				<option>{{e.name}}</option>
+					<option>
+						{{e.name}}
+					</option>
 				{%endfor%}
 			</select>
-
 		</div>
 		<div id='es4' class='es hidden'>
-			<label>Escort 4:</label>
+			<label>
+				Escort 4:
+			</label>
 			<select id='esc4' class='input select'>
 				{%for e in escorts%}
-				<option>{{e.name}}</option>
+					<option>
+						{{e.name}}
+					</option>
 				{%endfor%}
 			</select>
-
 		</div>
 	</div>
+	<!-- Promot when a new booking has been added -->
 	<div id="dialog-newBooking" title="New Booking!" class='hidden'>
-		<p class='dia_p'><span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>A new booking has been submitted from the website, Accept?</p>
+		<p class='dia_p'>
+			<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;">
+			</span>
+			A new booking has been submitted from the website, Accept?
+		</p>
 		<div class='newbookingDetails'>
 		</div>
 	</div>
 	
-</div>
-{%block addbooking%}
-{%include "create.html"%}
-
-{%endblock%}
+	</div>
+	<!-- Hidden Add booking div, shown and positioned when the button is clicked or the keybind pressed -->
+	{%block addbooking%}
+		{%include "create.html"%}
+	{%endblock%}
 
 </body>
 </html>

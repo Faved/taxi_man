@@ -1,81 +1,129 @@
-
+<!--
+ * TaMaS Project
+ *
+ *
+ * Copyright 2013 Alan Bennett
+ * Released under the MIT license
+ * https://github.com/Faved/taxi_man
+ *
+ * 
+ */ -->
 <!-- This is going to have the create page, It will contant all the things needed for adding a booking to the system. -->
 
 <div class='form'>
-
 	<div class='form-inner'>
 		<div class='createhead'>
-	<h1>Create Booking</h1>
-	</div>
-			<img src="/static/Cross-32.png">
-			<form action='donothing' id='bookingForm'>
-				<div class='form-wrapper'>
-					<div>
-						<label >Date:</label><input type='date' id='date_input' class='date' required>
-					</div>
-					<div>
-						<label>Time:</label><input type='text' id='time_input' class='time' required>
-					</div>
-					<div>
-						<label>Pickup:</label><input type='text' id='pickup_input' required>
-					</div>
-					<div>
-						<label>Destination: </label><input type='text' id='destin_input' required>
-					</div>
-					<div class='nopass1'>
-						<label># of Passengers:</label> <input type='number' id='pass_no_input' class="nopass" required>
-					</div>
-					<div>
-
-						<label>Vehicle Type:</label>
-						<select id='vehicle_input' class='input select'>
-							<option>Car</option>
-							<option>Minibus</option>
-							<option>Mobility</option>
+			<h1>
+				Create Booking
+			</h1>
+		</div>
+		<img src="/static/Cross-32.png">
+		<form action='donothing' id='bookingForm'>
+			<div class='form-wrapper'>
+				<div>
+					<label >
+						Date:
+					</label>
+					<input type='date' id='date_input' class='date' required>
+				</div>
+				<div>
+					<label>
+						Time:
+					</label>
+					<input type='text' id='time_input' class='time' required>
+				</div>
+				<div>
+					<label>
+						Pickup:
+					</label>
+					<input type='text' id='pickup_input' required>
+				</div>
+				<div>
+					<label>
+						Destination: 
+					</label>
+					<input type='text' id='destin_input' required>
+				</div>
+				<div class='nopass1'>
+					<label>
+						# of Passengers:
+					</label>
+					<input type='number' id='pass_no_input' class="nopass" required>
+				</div>
+				<div>
+					<label>
+						Vehicle Type:
+					</label>
+					<select id='vehicle_input' class='input select'>
+						<option>
+							Car
+						</option>
+						<option>
+							Minibus
+						</option>
+						<option>
+							Mobility
+						</option>
+					</select>
+				</div>
+				<div>
+					<label>
+						Customer Name:
+					</label>
+					<input type='text' id='cust_name_input' >
+				</div>
+				<div>
+					<label>
+						Customer Contact:
+					</label>
+					<input type='tel' id='cust_contact_input' >
+				</div>
+				<div>
+					<label>
+						More Info:
+					</label>
+					<textarea id='info_input' class='input' cols="35" rows=1>
+					</textarea>
+				</div>
+				<div>
+					<label>
+						Account?:
+					</label>
+					<input type='checkbox' name='accountpicker' id='is_Account'>
+				</div>
+				<div class='accountCreate'>
+					<div >
+						<label>
+							Account:
+						</label>
+						<select id='account_input' class='accountselect input '>
+							<!-- dangjo stuff -->
+							{%for a in accounts%}
+								<option>
+									{{a.name}} | {{a.alias}} | {{a.ref_no}}
+								</option>
+							{%endfor%}
 						</select>
 					</div>
 					<div>
-						<label>Customer Name:</label><input type='text' id='cust_name_input' >
+						<label>
+							Number of Escorts:
+						</label>
+						<input type='number' id='num_escorts_input' value='0' required >
 					</div>
-					<div>
-						<label>Customer Contact:</label><input type='tel' id='cust_contact_input' >
-					</div>
-					<div>
-						<label>More Info:</label><textarea id='info_input' class='input' cols="35" rows=1></textarea>
-					</div>
-					
-					<div>
-						<label>Account?:</label><input type='checkbox' name='accountpicker' id='is_Account'>
-					</div>
-					<div class='accountCreate'>
-						<div >
-							<label>Account:</label>
-							<select id='account_input' class='accountselect input '>
-								<!-- dangjo stuff -->
-								{%for a in accounts%}
-									<option>{{a.name}} | {{a.alias}} | {{a.ref_no}}</option>
-								{%endfor%}
-							</select>
-						</div>
-						<div>
-							<label>Number of Escorts:</label>
-							<input type='number' id='num_escorts_input' value='0' required >
-						</div>
-					</div>
-					
+				</div>	
 			</div>
-			
-			
 			<div>
-					<input type='submit' id='submitBooking' value="Make Booking">
+				<input type='submit' id='submitBooking' value="Make Booking">
 			</div>
 		</form>
-		
-			<div id='custMap'>
+		<div id='custMap'>
 			Put a map here?
 		</div>
 		<div id='info'>
-			<h1>Journey Info</h1>
+			<h1>
+				Journey Info
+			</h1>
 			<div class='distance'>
 				Distance: <span></span> Miles
 			</div>
@@ -85,12 +133,6 @@
 			<div class='price'>
 				Cost: &pound<span></span>
 			</div>
-
 		</div>
-		
 	</div>
-
-
 </div>
-
-

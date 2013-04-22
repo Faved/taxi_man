@@ -734,3 +734,52 @@
 [21/Apr/2013 17:18:15] DEBUG [tamas.views:324] faved - Declined remote booking with job id of: 65
 [21/Apr/2013 17:18:45] DEBUG [tamas.views:49] faved - loaded all jobs from home
 [21/Apr/2013 17:19:02] DEBUG [tamas.views:324] faved - Declined remote booking with job id of: 65
+[22/Apr/2013 21:40:35] DEBUG [tamas.views:49] faved - loaded all jobs from home
+[22/Apr/2013 21:42:23] DEBUG [tamas.views:49] faved - loaded all jobs from home
+[22/Apr/2013 22:04:00] DEBUG [tamas.views:49] faved - loaded all jobs from home
+[22/Apr/2013 22:04:30] DEBUG [tamas.views:49] faved - loaded all jobs from home
+[22/Apr/2013 22:05:24] DEBUG [tamas.views:49] faved - loaded all jobs from home
+[22/Apr/2013 22:05:38] DEBUG [tamas.views:285] faved - made driver available 
+[22/Apr/2013 22:05:49] DEBUG [tamas.views:49] faved - loaded all jobs from home
+[22/Apr/2013 22:05:59] DEBUG [tamas.views:285] faved - made driver available 
+[22/Apr/2013 22:06:26] DEBUG [tamas.views:49] faved - loaded all jobs from home
+[22/Apr/2013 22:06:28] DEBUG [tamas.views:245] faved - Added driver: 
+			2
+		 to booking: 
+				    			65
+				    		
+[22/Apr/2013 22:06:41] DEBUG [tamas.views:49] faved - loaded all jobs from home
+[22/Apr/2013 22:16:50] DEBUG [tamas.views:337] faved - Cleared job: 
+									65
+								
+[22/Apr/2013 22:17:11] DEBUG [tamas.views:49] faved - loaded all jobs from home
+[22/Apr/2013 22:18:12] DEBUG [tamas.views:49] faved - loaded all jobs from home
+[22/Apr/2013 22:21:14] DEBUG [tamas.views:49] faved - loaded all jobs from home
+[22/Apr/2013 22:21:34] DEBUG [tamas.views:49] faved - loaded all jobs from home
+[22/Apr/2013 22:26:41] DEBUG [tamas.views:49] faved - loaded all jobs from home
+[22/Apr/2013 22:26:52] DEBUG [tamas.views:49] faved - loaded all jobs from home
+[22/Apr/2013 22:27:14] DEBUG [tamas.views:206] faved - Requested booking info for job: 
+				    			65
+				    		
+[22/Apr/2013 22:27:33] DEBUG [tamas.views:183] faved - Added new booking to the database, added job id: 66
+[22/Apr/2013 22:27:46] DEBUG [tamas.views:49] faved - loaded all jobs from home
+[22/Apr/2013 22:31:46] DEBUG [tamas.views:245] faved - Added driver: 
+			1
+		 to booking: 
+				    			66
+				    		
+[22/Apr/2013 22:31:50] DEBUG [tamas.views:257] faved - Removed driver: 1 from job number: 
+				    			66
+				    		
+[22/Apr/2013 22:32:20] DEBUG [tamas.views:49] faved - loaded all jobs from home
+[22/Apr/2013 22:32:23] DEBUG [tamas.views:245] faved - Added driver: 
+			1
+		 to booking: 
+				    			66
+				    		
+[22/Apr/2013 22:32:25] DEBUG [tamas.views:257] faved - Removed driver: 1 from job number: 
+				    			66
+				    		
+[22/Apr/2013 22:32:27] DEBUG [tamas.views:206] faved - Requested booking info for job: 
+									65
+								

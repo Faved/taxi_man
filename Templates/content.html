@@ -1,9 +1,17 @@
 {%extends "base_template.html"%}
-
+<!--
+ * TaMaS Project
+ *
+ *
+ * Copyright 2013 Alan Bennett
+ * Released under the MIT license
+ * https://github.com/Faved/taxi_man
+ *
+ * 
+ */ -->
+ <!-- Header -->
 {%block header%}
-
-{%include "header.html"%}
-
+	{%include "header.html"%}
 {%endblock%}
 {%block content%}
 <!-- lets lay out the main content -->
@@ -11,56 +19,83 @@
 <div class="content">
 	<!-- left div -->
 	<div class="left">
+		<!-- Tabs -->
 		<div id="tabs">
-		  <ul>
-		    <li><a href="#tabs-1">Todays Current Jobs</a></li>
-		    <li><a href="#tabs-2">Todays Completed Jobs</a></li>
-		    <li><a href="#tabs-3">Search All Jobs</a></li>
-		  </ul>
-		  <div id="tabs-1">
-		  	
-				  	{%block table%}
-				  	{%include "table.html"%}
-				  	{%endblock%}
-			
-		    
-		  </div>
-		  <div id="tabs-2">
-		  
-				    {%block completeTable%}
+			<ul>
+				<li>
+					<a href="#tabs-1">
+						Todays Current Jobs
+					</a>
+				</li>
+			    <li>
+			    	<a href="#tabs-2">
+			    		Todays Completed Jobs
+			    	</a>
+			    </li>
+			    <li>
+			    	<a href="#tabs-3">
+			    		Search All Jobs
+			    	</a>
+			    </li>
+			</ul>
+		  	<!-- Main booking table -->
+		  	<div id="tabs-1">
+		  	  	{%block table%}
+			  		{%include "table.html"%}
+			  	{%endblock%}
+			</div>
+			<!-- Completed jobs table -->
+		  	<div id="tabs-2">
+		  	    {%block completeTable%}
 				    {%include "completedTable.html"%}
-				    {%endblock%}
-			   
-		  </div>
-		  <div id="tabs-3">
-		    {%block searchJobs%}
-		    {%include "searchJob.html"%}
-
-		    {%endblock%}
-		    
-		  </div>
+			    {%endblock%}
+			</div>
+			<!-- Serch for jobs tab -->
+		  	<div id="tabs-3">
+		    	{%block searchJobs%}
+		    		{%include "searchJob.html"%}
+			    {%endblock%}
+			</div>
 		</div>
-
 	</div>
+	<!-- Right hand side (drivers) -->
 	<div class="right">
 		<!-- the top is the current drivers -->
 		<div id="tabs2">
-		  <ul>
-		    <li><a href="#DriversAvail">Drivers</a></li>
-		    <li><a href="#tabs-3">On Call</a></li>
-		  </ul>
-		  <div id="DriversAvail">
-		    {%block drivers%}
-				    {%include "drivers.html"%}
-			{%endblock%}
-		  </div>
-		  <div id="tabs-3">
-		    {%for d in allDrivers %}
-		    	<div id="driver{{d.id}}" class="drivers_onCall drivers"><p> {{d.callsign}} <br/>{{d.name}}</p><span class='hidden driverid'>{{d.id}}</span></div>
-		    {%endfor%}
-		  </div>
+		  	<ul>
+		    	<li>
+		    		<a href="#DriversAvail">
+		    			Available Drivers
+		    		</a>
+		    	</li>
+		    	<li>
+		    		<a href="#tabs-3">
+		    			On Call
+		    		</a>
+		    	</li>
+		  	</ul>
+			<!-- Available drivers -->
+			<div id="DriversAvail">
+			    {%block drivers%}
+					{%include "drivers.html"%}
+				{%endblock%}
+			</div>
+			<!-- On call drivers -->
+		  	<div id="tabs-3">
+		    	{%for d in allDrivers %}
+		    		<div id="driver{{d.id}}" class="drivers_onCall drivers">
+		    			<p>
+		    				Callsign: {{d.callsign}}
+		    				<br/>
+		    				Name: {{d.name}}
+		    			</p>
+		    			<span class='hidden driverid'>
+		    				{{d.id}}
+		    			</span>
+		    		</div>
+			    {%endfor%}
+			</div>
 		</div>
-
 		<!-- this will have a list of drivers on jobs -->
 		<div class="drivers_unavil">
 			<div class="driversU_head">
@@ -69,18 +104,23 @@
 				{%for d in driversUnavail%}
 					{%for b in bookings%}
 						{%if d.driver.id == b.driver.id%}
-							<div id="driver{{d.id}}" class="drivers_uavail_inner drivers"><p> {{d.driver.callsign}} <br/>{{d.driver.name}}</p><span class='hidden driverid'>{{d.driver.id}}</span><span class="hidden jobid">{{b.id}}</span></div>
+							<div id="driver{{d.id}}" class="drivers_uavail_inner drivers">
+								<p> 
+									Callsign: {{d.driver.callsign}} 
+									<br/>
+									Name: {{d.driver.name}}
+								</p>
+								<span class='hidden driverid'>
+									{{d.driver.id}}
+								</span>
+								<span class="hidden jobid">
+									{{b.id}}
+								</span>
+							</div>
 		   				{%endif%}
 		   			{%endfor%}
 		    	{%endfor%}
-			
 		</div>
-		
 	</div>
 </div>
-
-
-
-
 {%endblock%}
-

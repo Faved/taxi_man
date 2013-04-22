@@ -1,13 +1,28 @@
-
+/*Global CSS classes used many places*/
 body{
   font-family: Verdana,Arial,sans-serif;
   font-size: 0.6em;
   line-height:1.8em;
   background:url('/static/grey_wash_wall.png');
 }
+/*hides stuff*/
 .hidden{
   display:none;
 }
+/*as name suggests*/
+.red{
+  color:#940D0D;
+}
+/*Background colour for minibus jobs*/
+.minibus{
+  background-color:#FAB9D3;
+}
+/*Background colour for Mobility jobs*/
+.mobility{
+  background-color: #E0F75C;
+}
+
+/*Main Container*/
 .container{
   margin:0 auto;
   background-color: white;
@@ -19,7 +34,74 @@ body{
 .content{
   height:500px;
 }
+/*Header and footer*/
+.header{
+  height:100px;
+}
+/*Tamas logo*/
+.logo{
+  width:300px;
+  height:74px;
+  text-indent: -999px;
+  background:url("/static/tamas-logo.png");
+  float:left;
+  margin-top:10px;
+  margin-left: 10px;
+}
+/*Clock and date */
+.head-box{
+  width:250px;
+  float:right;
+margin-top:57px;
+}
+.clock {
+    width: 200px;
+    margin: 0 auto;
+    padding: 0px;
 
+    color: black;
+}
+#Date {
+    font-family:  Helvetica, sans-serif;
+    font-size: 16px;
+    text-align: center;
+    
+}
+
+.datedisplay {
+    width: 200px;
+    margin: 0 auto;
+    padding: 0px;
+    list-style: none;
+    text-align: center;
+}
+
+.datedisplay li {
+    display: inline;
+    font-size: 1.5em;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    
+}
+#point {
+    position: relative;
+    -moz-animation: mymove 1s ease infinite;
+    -webkit-animation: mymove 1s ease infinite;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+/*User information */
+
+#user{
+ position:relative;
+  width: 200px;
+  height: 30px;
+  left:750px;
+  top:-90px;
+  font-size:1.5em;
+}
+
+/*Booking form Button*/
 .flex {
   -moz-box-shadow:inset 0px 1px 0px 0px #bbdaf7;
   -webkit-box-shadow:inset 0px 1px 0px 0px #bbdaf7;
@@ -44,12 +126,11 @@ body{
   margin-top:60px;
   margin-left:30px;
   -webkit-user-select: none; /* Chrome/Safari */        
--moz-user-select: none; /* Firefox */
--ms-user-select: none; /* IE10+ */
-
-/* Rules below not implemented in browsers yet */
--o-user-select: none;
-user-select: none;
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+ */
+  /* Rules below not implemented in browsers yet */
+  -o-user-select: none;
+  user-select: none;
 }
 .flex:hover {
   background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #378de5), color-stop(1, #79bbff) );
@@ -58,99 +139,49 @@ user-select: none;
   background-color:#378de5;
   cusor:pointer;
   -webkit-user-select: none; /* Chrome/Safari */        
--moz-user-select: none; /* Firefox */
--ms-user-select: none; /* IE10+ */
-
-/* Rules below not implemented in browsers yet */
--o-user-select: none;
-user-select: none;
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+ */
+  /* Rules below not implemented in browsers yet */
+  -o-user-select: none;
+  user-select: none;
 }
 .flex:active {
   position:relative;
   top:1px;
 }
 
-.logo{
-  width:300px;
-  height:74px;
-  text-indent: -999px;
-  background:url("/static/tamas-logo.png");
-  float:left;
-  margin-top:10px;
-  margin-left: 10px;
-}
-
-.header{
-  height:100px;
-}
-
 .footer{
 
 }
+/*left hand div, containing the tables and tabs*/
 
 .left{
   width:74%;
   float:left;
   height:100%;
 }
-.right{
-  width:26%;
-  float:left;
-  height:100%;
+/*examples on main page*/
+.showExample{
+  display:inline-block;
+  margin-left:0px;
 }
-#tabs2{
-  height:50%;
+#minibusExample{
+width:15px;
+height:15px;
+background-color:#FAB9D3;
+margin-right:10px;
 }
-.drivers_unavil{
-  height:47.5%;
-  border: thin solid grey;
-  border-radius:5px;
-  overflow-y:scroll;
+#mobilityExample{
+  background-color: #E0F75C;
+  width:15px;
+  height:15px;
+  margin-right:10px;
 }
-.driversU_head{
- height:7%;
-  background-color:#C7C7C7;
-  text-align:center;
-  border-radius: 3px;
-  font-size:1.2em;
+.examples{
+ width:80px; 
+  
 }
-
-
-
-.ui-tabs{
-  height:98%;
-}
-#DriversAvail{
- padding:0; 
- height:89%;
- overflow-y:scroll;
-}
-
-.drivers{
-  width:100%;
-  padding:0;
- 
-  margin-top:5px;
-  text-align:center;
-  border-radius:0.3em;
-  display:table;
-}
-
-
-.drivers p{
-  margin:0;
-  padding:0;
-  display:table-cell;
-  vertical-align:middle;
-}
-
-
-.drivers_avail,.drivers_onCall{
-   background:#c7c7c7;
-}
-.drivers_uavail_inner{
-  background:red;
-}
+/*Tables CSS*/
 #results, #jobsTable,#completedTable{
   position:relative;
   padding-top: 1.7em; 
@@ -212,24 +243,41 @@ user-select: none;
   text-align:center;
   border-bottom:thin solid black;
 }
-.form{
- width:100%;
-  height:500px;
-  
-}
-.maps{
- width:30%;
-  height:40%;
-  float:right;
-  border:thin solid;
-}
+/*Search for all jobs CSS*/
+.searchinner{
+ width:77%; 
 
+  margin:0 auto;
+}
+.searchinner div{
+ width:250px;
+  float:left;
+  margin:10px;
+  height:50px;
+}
+.searchinner input, .searchinner select{
+   width:200px;
+
+}
+.searchinner label{
+ display:block; 
+
+}
+#searchSubmit {
+ clear:both;
+margin-left:30%;
+}
+#jobSearch{
+ margin-bottom:10px;
+  margin-top:4px;
+}
+/*CSS for the drag & drop fucntion*/
 .drag-head{
  background:grey; 
 }
 .tableDrag{
- width:150px;
-  height:90px;
+  width:180px;
+  height:120px;
   text-align:center;
   border:thin solid black;
   background: white;
@@ -238,36 +286,84 @@ user-select: none;
 }
 .drop-hover{
   border: solid black;
-  border-width: 5px 1px;
+  background-color:#F76A6A !important;
+  border-width: 10px 10px;
   cursor:copy;
 }
 
-.footer{
-  display: none;
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 100%;
-  background:rgba(64,64,64,0.8); 
-  z-index: 8080;
+/*Right div, with #tabs-2 and the driver sections*/
+.right{
+  width:26%;
+  float:left;
+  height:100%;
 }
-.footer-inner{
-  position: relative;
-  background: white;
-  width: 1000px;
-  margin-left: auto;
-  margin-right: auto;
-  height: 90%;
-  margin-top: 25px;
-  border-radius: 5px;
+.ui-tabs{
+  height:98%;
+}
+#tabs2{
+  height:50%;
+}
+/*Drivers available tab*/
+#DriversAvail, #tabs-3{
+ padding:0; 
+ height:89%;
+ overflow-y:scroll;
+}
 
+/*Drivers class*/
+.drivers{
+  width:92%;
+  padding:3px;
+  margin:5px auto;
+  border:thin solid black;
+  text-align:center;
+  border-radius:0.3em;
+  display:table;
 }
-.footer-inner img{
-  position:absolute;
-  top:-15px;
-  right:10px;
-  cursor:pointer;
+/*and the text*/
+.drivers p{
+  margin:0;
+  padding:0;
+  display:table-cell;
+  vertical-align:middle;
+}
+/*Unavailable drivers*/
+.drivers_unavil{
+  height:47.5%;
+  border: thin solid grey;
+  border-radius:5px;
+  overflow-y:scroll;
+}
+.driversU_head{
+  height:8%;
+  border-bottom:thin solid black;
+  background-color:#C7C7C7;
+  text-align:center;
+  font-size:1.24em;
+}
+.drivers_avail,.drivers_onCall{
+   background:#D0F2C4;
+  -webkit-box-shadow:-1px 2px 10px rgba(50, 50, 50, 0.63);
+  -moz-box-shadow:-1px 2px 10px rgba(50, 50, 50, 0.63);
+  box-shadow:-1px 2px 10px rgba(50, 50, 50, 0.63);
+}
+.drivers_uavail_inner{
+  background:#F76A6A;
+  width:92%;
+  padding:3px;
+  border:thin solid black;
+  margin:5px auto;
+  -webkit-box-shadow:-1px 2px 10px rgba(50, 50, 50, 0.63);
+  -moz-box-shadow:-1px 2px 10px rgba(50, 50, 50, 0.63);
+  box-shadow:-1px 2px 10px rgba(50, 50, 50, 0.63);
+}
+
+/*Booking form*/
+
+.form{
+ width:100%;
+  height:500px;
+  
 }
 .form,.form2{
   display:none;
@@ -303,15 +399,19 @@ user-select: none;
   width:320px;
   margin-right:10px;
 }
-
+/*Title*/
+.createhead{
+  width:575px;
+  height:30px;
+  margin-top:-30px;
+  margin-bottom:10px;
+  text-align:center;
+}
 .form-wrapper, .acc-form{
   width:320px;
  
 }
-.pac-container{
-  z-index:9999;
-}
-
+/*Input CSS*/
 input, .input {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   border:1px solid #ccc;
@@ -329,6 +429,7 @@ input, .input {
   -ms-border-radius:5px;
   border-radius:5px;
 }
+/*Validation*/
 :invalid { 
   border-color: #e88;
   -webkit-box-shadow: 0 0 5px rgba(255, 0, 0, .8);
@@ -366,67 +467,30 @@ input, .input {
     background:white;
 }
 
-
 .form-inner label{
   display:block;
 }
+/*google maps container*/
 #custMap{
   height:400px;
   width:250px;
   
 }
-
-
-.red{
-  color:#940D0D;
+.maps{
+ width:30%;
+  height:40%;
+  float:right;
+  border:thin solid;
 }
-.minibus{
-  background-color:#FAB9D3;
+/*Required to show the autocomplete*/
+.pac-container{
+  z-index:9999;
 }
-.mobility{
-  background-color: #E0F75C;
+/*has account info in, shown when checkbox is clicked*/
+.accountCreate{
+  display: none;
 }
-.qtip-title{
-  text-align: center;
-}
-.dispatch_status img{
-  width:20px;
-  height: 20px;
-}
-.es{
- width:230px; 
-}
-.dia_p{
-  height:20px;
-  float:left;
-}
-.searchinner{
- width:77%; 
-
-  margin:0 auto;
-}
-.searchinner div{
- width:250px;
-  float:left;
-  margin:10px;
-  height:50px;
-}
-.searchinner input, .searchinner select{
-   width:200px;
-
-}
-.searchinner label{
- display:block; 
-
-}
-#searchSubmit {
- clear:both;
-margin-left:30%;
-}
-#jobSearch{
- margin-bottom:10px;
-  margin-top:4px;
-}
+/*Info about the booking*/
 #info{
   width:240px;
   border:thin solid black;
@@ -447,93 +511,32 @@ margin-left:30%;
   margin-left:20px;
   font-size:16px;
 }
- .createhead{
- width:575px;
+/*Login page*/
+.login_page{
 
-  height:30px;
-  margin-top:-30px;
-  margin-bottom:10px;
+  width:400px;
+  clear:both;
+  margin:0 auto;
+  display:block;
   text-align:center;
+}
+
+.login_submit{
+ width:300px;
+  margin-left:14px;
+}
+.welcome{
+
+  width:400px;
+  clear:both;
+  margin: 0 auto;
+  text-align:center;
+  font-size:11px;
   
 }
-.accountCreate{
-  display: none;
-}
-.showExample{
- display:inline-block;
-  margin-left:0px;
-}
-#minibusExample{
-width:15px;
-height:15px;
-background-color:#FAB9D3;
-margin-right:10px;
-}
-#mobilityExample{
-  background-color: #E0F75C;
-  width:15px;
-  height:15px;
-  margin-right:10px;
-}
-.examples{
- width:80px; 
-  
-}
-.head-box{
-  width:250px;
-  float:right;
-margin-top:57px;
-}
-.clock {
-    width: 200px;
-    margin: 0 auto;
-    padding: 0px;
-
-    color: black;
-}
-#Date {
-    font-family:  Helvetica, sans-serif;
-    font-size: 16px;
-    text-align: center;
-    
-}
-
-.datedisplay {
-    width: 200px;
-    margin: 0 auto;
-    padding: 0px;
-    list-style: none;
-    text-align: center;
-}
-
-.datedisplay li {
-    display: inline;
-    font-size: 1.5em;
-    text-align: center;
-    font-family: Arial, Helvetica, sans-serif;
-    
-}
-#point {
-    position: relative;
-    -moz-animation: mymove 1s ease infinite;
-    -webkit-animation: mymove 1s ease infinite;
-    padding-left: 10px;
-    padding-right: 10px;
-}
 
 
-#user{
- position:relative;
-  width: 200px;
-  height: 30px;
-  left:750px;
-  top:-90px;
-  font-size:1.5em;
-}
-
-
-
-/* Add some nice box-shadow-ness to the dialogues */
+/* CSS for the qtip library */
 .qtip-dialogue{
   max-width: 420px;
   min-width: 210px;
@@ -574,38 +577,19 @@ margin-top:57px;
   float: none;
   width: 100%;
 }
-.login_page{
-
-  width:400px;
-  clear:both;
-  margin:0 auto;
-  display:block;
-  text-align:center;
+.qtip-title{
+  text-align: center;
 }
-
-.login_submit{
- width:300px;
-  margin-left:14px;
+.dispatch_status img{
+  width:20px;
+  height: 20px;
 }
-.welcome{
-
-  width:400px;
-  clear:both;
-  margin: 0 auto;
-  text-align:center;
-  font-size:11px;
-  
+.es{
+ width:230px; 
 }
-
-
-
-
-
-
-
-
-
-
-
+.dia_p{
+  height:20px;
+  float:left;
+}
 
 
